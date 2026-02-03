@@ -18,8 +18,9 @@
     --card-bg: rgba(255,255,255,0.03);
     --glass: rgba(255,255,255,0.04);
   }
-  html,body{height:100%;margin:0;font-family:Montserrat,system-ui,-apple-system; background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-  .wrap{width:100%;height:100%;position:relative;overflow:hidden;display:flex;flex-direction:column}
+  html,body{height:100%;margin:0;font-family:Montserrat,system-ui,-apple-system; background:var(--bg);
+    color:var(--text);-webkit-font-smoothing:antialiased}
+  .wrap{width:100%;height:100%;position:relative;overflow:auto;display:flex;flex-direction:column}
   /* iframe area */
   .content{flex:1;position:relative;display:flex}
   iframe#frame{width:100%;height:100%;border:0;transition:opacity .4s;opacity:1}
@@ -40,6 +41,11 @@
   .footer{position:fixed;left:20px;right:20px;bottom:12px;text-align:center;z-index:60;color:rgba(215,215,215,0.7);font-size:0.9em}
   /* responsive */
   @media (max-width:600px){ .symbol-bar{right:8px;top:30%} .controls{left:8px;top:90px} #pulsos{max-height:140px} }
+  
+  html,
+body {
+  background: transparent !important;
+}
 </style>
 </head>
 <body>
