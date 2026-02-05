@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Dual.Infodose — Minimal HUD</title>
+<style>
+  :root {
+    --bg-blur: rgba(10, 12, 20, 0.75);
+    --card-bg: rgba(20, 22, 32, 0.85);
+    --text: #f0f3f9;
+    --muted: rgba(255, 255, 255, 0.45);
+    --accent: #32d7cb;
+    --danger: #ff5e5e;
+    --border: rgba(255, 255, 255, 0.08);
+  }
+
+  /* layout base */
+  html, body { 
+    height: 100%; margin: 0; padding: 0; 
+    background: #05060a; color: var(--text); 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    overflow: hidden;
+  }
+  
+  .wrap { width: 100%; height: 100vh; display: flex; flex-direction: column; }
+  .content { flex: 1; position: relative; }
+  iframe#frame { width: 100%; height: 100%; border: 0; background: #000; transition: opacity .3s; }
+
+  /* Symbol Bar (HUD) */
+  .symbol-bar {
+    position: fixed;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 18px;
+    background: var(--bg-blur);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    touch-action: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 38px;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  /* Container do Toggle */
+  .toggle-wrap { margin-bottom: 4px; flex-shrink: 0; }
+
+  /* Estilo base dos botões */
+  .symbol-button {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card-bg);
+    font-size: 17px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .symbol-button:active { transform: scale(0.92); background: rgba(255,255,255,0.1); }
+
+  /* Botão de Toggle (Menu) */
+  .symbol-button.toggle {
+    background: linear-gradient(145deg, #1e2230, #13151f);
+    font-weight: bold;
+    color: var(--accent);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    border-color: rgba(50, 215, 203, 0.3);
+  }
+
+  /* RECORREÇÃO: Ocultar botões quando recolhido */
+  .symbol-bar.collapsed { 
+    gap: 0;
+    padding-bottom: 10px;
+  }
+  
+  .symbol-bar.collapsed .symbol-wrap { 
+    height: 0;
+    margin: 0;
+    opacity: 0;
+    transform: scale(0.7);
+    pointer-events: none;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+
+  .symbol-wrap {
+    transition: all 0.3s ease;
+    height: 38px; /* Altura do botão */
+    opacity: 1;
+  }
+
+  .symbol-bar.collapsed .hint { 
+    display: none; 
+  }
+
+  /* Modo Edição */
+  .symbol-bar.edit-mode {
+    border: 1px dashed var(--accent);
+    animation: pulse-border 1.5s infinite;
+  }
+  @keyframes pulse-border {
+    0% { border-color: var(--accent); }
+    50% { border-color: transparent; }
+    100% { border-color: var(--accent); }
+  }
+
+  /* Hint Texto */
+  .hint {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+    max-width: 60px;
+    text-align: center;
+    line-height: 1.2;
+    pointer-events: none;
+  }
+
+  /* Lixeira */
+  .trash {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 60, 60, 0.15);
+    color: var(--danger);
+    border: 1.5px dashed var(--danger);
+    z-index: 10001;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    font-size: 20px;
+  }
+  .trash.visible { opacity: 1; transform: scale(1); pointer-events: auto; }
+  .trash.over { background: var(--danger); color: white; transform: scale(1.1); }
+
+  .dragging-temp { opacity: 0.4; transform: scale(0.8); }
+
+  @media (max-width: 480px) {
+    .symbol-bar { right: 10px; padding: 8px; }
+    .symbol-button { width: 36px; height: 36px; font-size: 16px; }
+    .symbol-button.toggle { width: 38px; height: 38px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="content">
+    <iframe id="frame" src="about:blank"></iframe>
+  </div>
+
+  <div class="symbol-bar" id="symbolBar" role="toolbar">
+    <div class="toggle-wrap">
+      <button class="symbol-button toggle" id="toggleBtn" title="Menu">≡</button>
+    </div>
+
+    <div class="symbol-wrap"><button class="symbol-button" data-id="phi" data-url="about:blank" title="Φ">Φ</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual-Vivivi-1/" title="꩜">꩜</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="home" data-url="https://kodux78k.github.io/oiDual-idHome/" title="◌">◌</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="uno" data-url="https://kodux78k.github.io/Unouno-/index.html" title="☼">☼</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="tst" data-url="https://kodux78k.github.io/oiDual-tst1/" title="◑">◑</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="doc" data-url="https://kodux78k.github.io/info-Doc/index.html" title="◘">◘</button></div>
+
+    <div class="hint" id="hudHint">Menu</div>
+  </div>
+
+  <div class="trash" id="trash">✕</div>
+</div>
+
+<script>
+(function(){
+  const LS_POS = 'dual_pos';
+  const LS_COLLAPSE = 'dual_coll';
+  const LS_HIDDEN = 'dual_hid';
+  const LS_ORDER = 'dual_ord';
+  const LS_LAST = 'dual_last';
+
+  const bar = document.getElementById('symbolBar');
+  const toggleBtn = document.getElementById('toggleBtn');
+  const frame = document.getElementById('frame');
+  const trash = document.getElementById('trash');
+  const hint = document.getElementById('hudHint');
+
+  const LONG_PRESS_TIME = 600;
+  const MOVE_LIMIT = 8;
+
+  let timer = null;
+  let pInfo = null;
+  let isDraggingBar = false;
+  let editMode = false;
+
+  function init(){
+    const last = localStorage.getItem(LS_LAST);
+    if(last) frame.src = last;
+
+    // Restaurar estado recolhido
+    if(localStorage.getItem(LS_COLLAPSE) === 'true') {
+        bar.classList.add('collapsed');
+    }
+
+    applyHidden();
+    applyOrder();
+    applyPosition();
+    setupInteractions();
+    setupEditMode();
+  }
+
+  function setupInteractions(){
+    bar.addEventListener('pointerdown', e => {
+      const btn = e.target.closest('.symbol-button');
+      pInfo = { 
+        id: e.pointerId, 
+        x: e.clientX, 
+        y: e.clientY, 
+        btn, 
+        moved: false,
+        longTriggered: false 
+      };
+
+      timer = setTimeout(() => {
+        pInfo.longTriggered = true;
+        if(pInfo.btn === toggleBtn) {
+          toggleEdit(!editMode);
+        } else if(pInfo.btn) {
+          toggleVisibility(pInfo.btn);
+        }
+      }, LONG_PRESS_TIME);
+
+      try { e.target.setPointerCapture(e.pointerId); } catch(err){}
+    });
+
+    bar.addEventListener('pointermove', e => {
+      if(!pInfo) return;
+      const dist = Math.hypot(e.clientX - pInfo.x, e.clientY - pInfo.y);
+      if(dist > MOVE_LIMIT) {
+        pInfo.moved = true;
+        clearTimeout(timer);
+        // Só arrasta a barra se NÃO for um botão de ícone no modo edição
+        if(!editMode || pInfo.btn === toggleBtn) startBarDrag(e);
+      }
+    });
+
+    bar.addEventListener('pointerup', e => {
+      if(!pInfo) return;
+      clearTimeout(timer);
+      
+      if(isDraggingBar) {
+        stopBarDrag();
+      } else if(!pInfo.moved && !pInfo.longTriggered) {
+        if(pInfo.btn === toggleBtn) {
+          // Toggle Clássico
+          const isNowCollapsed = bar.classList.toggle('collapsed');
+          localStorage.setItem(LS_COLLAPSE, isNowCollapsed);
+        } else if(pInfo.btn) {
+          loadUrl(pInfo.btn);
+        }
+      }
+      pInfo = null;
+    });
+  }
+
+  function startBarDrag(e){
+    isDraggingBar = true;
+    bar.style.transition = 'none';
+    updateBarPos(e.clientX, e.clientY);
+  }
+
+  function updateBarPos(clientX, clientY){
+    const bw = bar.offsetWidth, bh = bar.offsetHeight;
+    let x = clientX - (bw/2);
+    let y = clientY - (bh/2);
+    x = Math.max(10, Math.min(window.innerWidth - bw - 10, x));
+    y = Math.max(10, Math.min(window.innerHeight - bh - 10, y));
+    bar.style.left = x + 'px';
+    bar.style.top = y + 'px';
+    bar.style.right = 'auto';
+    bar.style.transform = 'none';
+  }
+
+  function stopBarDrag(){
+    isDraggingBar = false;
+    bar.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+    const r = bar.getBoundingClientRect();
+    localStorage.setItem(LS_POS, JSON.stringify({x: r.left, y: r.top}));
+  }
+
+  function toggleEdit(on){
+    editMode = on;
+    bar.classList.toggle('edit-mode', on);
+    trash.classList.toggle('visible', on);
+    // Expandir para editar caso esteja fechado
+    if(on && bar.classList.contains('collapsed')) {
+        bar.classList.remove('collapsed');
+    }
+    bar.querySelectorAll('.symbol-button[data-id]').forEach(b => b.draggable = on);
+    hint.textContent = on ? "Editar" : "Menu";
+  }
+
+  function loadUrl(btn){
+    const url = btn.dataset.url;
+    if(url) {
+      frame.src = url;
+      localStorage.setItem(LS_LAST, url);
+    }
+  }
+
+  function toggleVisibility(btn){
+    const id = btn.dataset.id;
+    if(!id) return;
+    let hidden = getHidden();
+    const i = hidden.indexOf(id);
+    if(i > -1) hidden.splice(i, 1); else hidden.push(id);
+    localStorage.setItem(LS_HIDDEN, JSON.stringify(hidden));
+    applyHidden();
+  }
+
+  function setupEditMode(){
+    bar.addEventListener('dragstart', e => {
+      if(!editMode) return e.preventDefault();
+      const btn = e.target.closest('.symbol-button');
+      if(!btn || !btn.dataset.id) return e.preventDefault();
+      e.dataTransfer.setData('text', btn.dataset.id);
+      btn.classList.add('dragging-temp');
+    });
+
+    bar.addEventListener('dragend', e => {
+      e.target.classList.remove('dragging-temp');
+      trash.classList.remove('over');
+    });
+
+    bar.addEventListener('dragover', e => e.preventDefault());
+    
+    bar.addEventListener('drop', e => {
+      const targetWrap = e.target.closest('.symbol-wrap');
+      const id = e.dataTransfer.getData('text');
+      if(targetWrap && id) {
+        const sourceBtn = bar.querySelector(`[data-id="${id}"]`);
+        const sourceWrap = sourceBtn.closest('.symbol-wrap');
+        bar.insertBefore(sourceWrap, targetWrap);
+        saveOrder();
+      }
+    });
+
+    trash.addEventListener('dragover', e => { e.preventDefault(); trash.classList.add('over'); });
+    trash.addEventListener('dragleave', () => trash.classList.remove('over'));
+    trash.addEventListener('drop', e => {
+      const id = e.dataTransfer.getData('text');
+      if(id) {
+        let hidden = getHidden();
+        if(!hidden.includes(id)) hidden.push(id);
+        localStorage.setItem(LS_HIDDEN, JSON.stringify(hidden));
+        applyHidden();
+        saveOrder();
+      }
+    });
+  }
+
+  function getHidden(){ try{ return JSON.parse(localStorage.getItem(LS_HIDDEN)) || []; }catch(e){ return []; } }
+  function applyHidden(){
+    const h = getHidden();
+    bar.querySelectorAll('.symbol-button[data-id]').forEach(b => {
+      const wrap = b.closest('.symbol-wrap');
+      const isHidden = h.includes(b.dataset.id);
+      wrap.style.display = isHidden ? 'none' : 'flex';
+    });
+  }
+  function saveOrder(){
+    const ids = Array.from(bar.querySelectorAll('.symbol-button[data-id]')).map(b => b.dataset.id);
+    localStorage.setItem(LS_ORDER, JSON.stringify(ids));
+  }
+  function applyOrder(){
+    try {
+      const ord = JSON.parse(localStorage.getItem(LS_ORDER));
+      if(!ord) return;
+      ord.forEach(id => {
+        const b = bar.querySelector(`[data-id="${id}"]`);
+        if(b) bar.appendChild(b.closest('.symbol-wrap'));
+      });
+    } catch(e){}
+  }
+  function applyPosition(){
+    try {
+      const p = JSON.parse(localStorage.getItem(LS_POS));
+      if(p) {
+        bar.style.left = p.x + 'px'; bar.style.top = p.y + 'px'; bar.style.right = 'auto'; bar.style.transform = 'none';
+      }
+    } catch(e){}
+  }
+
+  window.addEventListener('resize', () => {
+    const r = bar.getBoundingClientRect();
+    if(r.right > window.innerWidth) updateBarPos(window.innerWidth - 20, r.top + r.height/2);
+  });
+
+  init();
+})();
+</script>
+</body>
+</html>
+
