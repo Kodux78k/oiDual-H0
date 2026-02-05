@@ -291,11 +291,9 @@
   }
 
   function loadUrl(btn){
-    const url = btn.dataset.url;
-    if(url && url !== "about:blank") {
-      frame.src = url;
-      localStorage.setItem('dual_last', url);
-    }
+  const url = btn.dataset.url || 'about:blank';
+  frame.src = url;
+  localStorage.setItem('dual_last', url);
   }
 
   function toggleEdit(on){
