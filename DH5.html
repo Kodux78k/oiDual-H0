@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Dual.Infodose — Mobile First HUD</title>
+<style>
+  :root{
+    --card-bg: rgba(8,10,18,0.85);
+    --text: #e9eef8;
+    --muted: rgba(255,255,255,0.6);
+    --accent: rgba(30,190,180,0.95);
+    --danger: #ff6b6b;
+  }
+
+  /* layout */
+  html,body{height:100%;margin:0;background:#020217;color:var(--text);-webkit-font-smoothing:antialiased;}
+  .wrap{width:100%;height:100%;min-height:100vh;position:relative;display:flex;flex-direction:column;overflow:hidden}
+  .content{flex:1;position:relative;display:flex}
+  iframe#frame{width:100%;height:100%;border:0;min-height:100vh;transition:opacity .28s}
+
+  /* symbol bar */
+  .symbol-bar{
+    position: fixed;
+    right: 12px;
+    top: 40%;
+    z-index: 10000;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:12px 10px 18px;
+    border-radius:14px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+    backdrop-filter: blur(8px) saturate(120%);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.55);
+    user-select: none;
+    touch-action: none;
+    min-width:58px;
+    align-items:center;
+    transition:transform .12s, opacity .12s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .symbol-bar.dragging{transform:scale(1.01);opacity:.98}
+  .symbol-bar.edit-mode{outline:2px dashed rgba(160,220,255,0.10)}
+
+  /* toggle sits on top, centered horizontally */
+  .toggle-wrap{position:absolute; left:50%; top:-18px; transform:translateX(-50%); z-index:10003; display:flex; align-items:center; justify-content:center; pointer-events:auto;}
+  .symbol-button.toggle{
+    width:48px;height:48px;border-radius:12px;font-weight:700;font-size:18px;
+    display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);
+    background: linear-gradient(180deg, rgba(25,25,30,0.95), rgba(18,18,22,0.95));
+    color:var(--text); box-shadow: 0 8px 26px rgba(0,0,0,0.6);
+  }
+
+  .symbol-wrap{position:relative; display:inline-flex; align-items:center; justify-content:center;}
+  .symbol-button{
+    width:46px;height:46px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);
+    display:flex;align-items:center;justify-content:center;background:var(--card-bg);
+    font-size:20px;color:var(--text); touch-action:none; -webkit-user-select:none;
+  }
+  .symbol-button:active{transform:scale(.98)}
+  .symbol-button.hidden{opacity:0; pointer-events:none; display:none !important;}
+
+  .symbol-bar.collapsed .symbol-button:not(.toggle){display:none}
+
+  .hint{font-size:12px;color:var(--muted);text-align:center;margin-top:6px;opacity:0.95}
+
+  /* trash */
+  .trash{
+    position: fixed; left: 12px; bottom: 18px; width:62px; height:62px; border-radius:12px; display:flex;align-items:center;justify-content:center;
+    background: rgba(255,50,50,0.06); color:var(--danger); border:1px dashed rgba(255,50,50,0.12); z-index:10002; transform:translateY(10px); opacity:0;
+    transition:opacity .18s, transform .18s;
+    pointer-events:none;
+  }
+  .trash.visible{opacity:1; transform:translateY(0); pointer-events:auto}
+  .trash.over{ background: rgba(255,50,50,0.12); box-shadow:0 8px 28px rgba(255,50,50,0.06); }
+
+  /* responsive tweaks */
+  @media (max-width:520px){
+    .symbol-bar{ padding: 8px 8px 14px; gap:8px; min-width:52px; }
+    .symbol-button{ width:44px; height:44px; font-size:18px; border-radius:10px; }
+    .symbol-button.toggle{ width:46px; height:46px; top:-16px; }
+    .toggle-wrap{top:-16px;}
+    .trash{ left:10px; bottom:12px; width:54px; height:54px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="content">
+    <iframe id="frame" src="about:blank" title="Dual Infodose frame"></iframe>
+  </div>
+
+  <!-- HUD -->
+  <div class="symbol-bar" id="symbolBar" role="toolbar" aria-label="Dual Infodose Symbols" tabindex="0">
+    <div class="toggle-wrap">
+      <button class="symbol-button toggle" id="toggleBtn" title="≡">≡</button>
+    </div>
+
+    <!-- icons -->
+    <div class="symbol-wrap"><button class="symbol-button" data-id="phi" data-url="about:blank" title="Φ">Φ</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual-Vivivi-1/" title="꩜">꩜</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="home" data-url="https://kodux78k.github.io/oiDual-idHome/" title="◌">◌</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="uno" data-url="https://kodux78k.github.io/Unouno-/index.html" title="☼">☼</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="tst" data-url="https://kodux78k.github.io/oiDual-tst1/" title="◑">◑</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="doc" data-url="https://kodux78k.github.io/info-Doc/index.html" title="◘">◘</button></div>
+
+    <div class="hint" id="hudHint">Toque = abrir • Pressão longa = ocultar/editar</div>
+  </div>
+
+  <div class="trash" id="trash">🗑</div>
+</div>
+
+<script>
+/* Mobile-first HUD
+   Gestos:
+   - tap curto: abre no iframe
+   - long-press (>=650ms) em ícone: oculta / mostra (persistente)
+   - long-press no toggle: entra/ sai Edit Mode (arrastar ícones para reordenar / soltar na lixeira)
+   - drag: mova o HUD arrastando (em qualquer ponto do painel)
+   - drag ícone em Edit Mode: rearranjar; soltar na lixeira remove (adiciona a ocultos)
+   Persistência: localStorage keys mantidas
+*/
+
+(function(){
+  const LS_POS_KEY = 'dual_symbol_pos';
+  const LS_COLLAPSE_KEY = 'dual_symbols_collapsed';
+  const LS_HIDDEN_KEY = 'dual_symbols_hidden';
+  const LS_ORDER_KEY = 'dual_symbols_order';
+  const LS_LAST_URL = 'dual_last';
+
+  const bar = document.getElementById('symbolBar');
+  const toggleBtn = document.getElementById('toggleBtn');
+  const frame = document.getElementById('frame');
+  const trash = document.getElementById('trash');
+  const hint = document.getElementById('hudHint');
+
+  const LONG_PRESS_MS = 650;       // press duration threshold
+  const MOVE_THRESHOLD = 10;       // px before we consider a move (drag)
+
+  let longPressTimer = null;
+  let pointerDownInfo = null;      // {id, startX, startY, targetWrap, moved, time}
+  let isDraggingHUD = false;
+  let editMode = false;
+  let draggedIconId = null;
+
+  function log(...s){ console.log('[Dual.Infodose]', ...s); }
+
+  /* init */
+  (function init(){
+    log('inicializando mobile HUD');
+    // restore last url
+    const last = localStorage.getItem(LS_LAST_URL);
+    if(last) frame.src = last;
+
+    // collapsed
+    if(localStorage.getItem(LS_COLLAPSE_KEY) === 'true') bar.classList.add('collapsed');
+
+    // apply hidden + order + position
+    applyHiddenFromStorage();
+    applyOrderFromStorage();
+    applyPositionFromStorage();
+
+    // save iframe url on load
+    frame.addEventListener('load', ()=> localStorage.setItem(LS_LAST_URL, frame.src));
+
+    // attach pointer handlers
+    attachPointerHandlers();
+
+    // attach toggle interactions
+    attachToggleHandlers();
+
+    // prepare drag/drop for edit mode
+    prepareEditDragDrop();
+
+    // initial save order if empty
+    saveOrderToStorage();
+  })();
+
+  /* helper: hidden list */
+  function getHiddenList(){ try{ const raw = localStorage.getItem(LS_HIDDEN_KEY); return raw ? JSON.parse(raw) : []; }catch(e){return []} }
+  function setHiddenList(arr){ localStorage.setItem(LS_HIDDEN_KEY, JSON.stringify(arr)); }
+  function applyHiddenFromStorage(){
+    const list = getHiddenList();
+    bar.querySelectorAll('.symbol-button[data-id]').forEach(btn=>{
+      const wrap = btn.closest('.symbol-wrap');
+      if(list.includes(btn.dataset.id)){
+        if(wrap) wrap.style.display = 'none';
+        btn.classList.add('hidden');
+      } else {
+        if(wrap) wrap.style.display = '';
+        btn.classList.remove('hidden');
+      }
+    });
+  }
+
+  /* order */
+  function applyOrderFromStorage(){
+    try{
+      const raw = localStorage.getItem(LS_ORDER_KEY);
+      if(!raw) return;
+      const order = JSON.parse(raw);
+      const map = {};
+      bar.querySelectorAll('.symbol-wrap').forEach(w=>{
+        const b = w.querySelector('.symbol-button[data-id]');
+        if(b && b.dataset.id) map[b.dataset.id] = w;
+      });
+      // append in stored order right after toggle-wrap
+      const toggleWrap = bar.querySelector('.toggle-wrap');
+      let last = toggleWrap;
+      order.forEach(id => {
+        const node = map[id];
+        if(node){
+          bar.insertBefore(node, last.nextSibling);
+          last = node;
+        }
+      });
+      // append leftover ones
+      Object.keys(map).forEach(id => { if(!order.includes(id)) bar.appendChild(map[id]); });
+    }catch(e){ console.warn('applyOrder err', e); }
+  }
+  function saveOrderToStorage(){
+    const ids = [];
+    bar.querySelectorAll('.symbol-button[data-id]').forEach(b => ids.push(b.dataset.id));
+    localStorage.setItem(LS_ORDER_KEY, JSON.stringify(ids));
+    log('order saved', ids);
+  }
+
+  /* position */
+  function applyPositionFromStorage(){
+    try{
+      const raw = localStorage.getItem(LS_POS_KEY);
+      if(!raw) return;
+      const pos = JSON.parse(raw);
+      if(typeof pos.left === 'number' && typeof pos.top === 'number'){
+        bar.style.left = pos.left + 'px'; bar.style.top = pos.top + 'px'; bar.style.right = 'auto';
+      }
+    }catch(e){}
+  }
+  function savePosition(left, top){ localStorage.setItem(LS_POS_KEY, JSON.stringify({left: Math.round(left), top: Math.round(top)})); }
+
+  /* pointer handling (unified) */
+  function attachPointerHandlers(){
+    // pointerdown anywhere inside bar
+    bar.addEventListener('pointerdown', (ev) => {
+      const p = ev;
+      const targetButton = p.target.closest('.symbol-button');
+      const targetWrap = p.target.closest('.symbol-wrap');
+
+      pointerDownInfo = {
+        id: p.pointerId,
+        startX: p.clientX,
+        startY: p.clientY,
+        time: Date.now(),
+        targetButton: targetButton,
+        targetWrap: targetWrap,
+        moved: false,
+        handledLongPress: false
+      };
+
+      // start long-press timer for either icon (hide) or toggle (editMode)
+      longPressTimer = setTimeout(() => {
+        if(!pointerDownInfo) return;
+        pointerDownInfo.handledLongPress = true;
+        if(pointerDownInfo.targetButton === toggleBtn){
+          // long press on toggle => toggle edit mode
+          toggleEditMode(!editMode);
+        } else if(pointerDownInfo.targetButton){
+          // long press on icon => toggle hide/unhide
+          handleLongPressOnIcon(pointerDownInfo.targetButton);
+        } else {
+          // long press on empty bar: do nothing special
+        }
+      }, LONG_PRESS_MS);
+
+      // capture pointer to track movements
+      try{ p.target.setPointerCapture(p.pointerId); }catch(e){}
+    });
+
+    bar.addEventListener('pointermove', (ev) => {
+      if(!pointerDownInfo) return;
+      const dx = ev.clientX - pointerDownInfo.startX;
+      const dy = ev.clientY - pointerDownInfo.startY;
+      if(!pointerDownInfo.moved && Math.hypot(dx,dy) > MOVE_THRESHOLD){
+        pointerDownInfo.moved = true;
+        // if an icon was pressed and not in edit mode, treat this as HUD drag start
+        // or if in edit mode and dragging icon, we will handle elsewhere
+      }
+      // if moved beyond threshold -> drag HUD (unless we're dragging an icon in editMode)
+      if(pointerDownInfo.moved && (!editMode || !pointerDownInfo.targetButton || pointerDownInfo.targetButton === toggleBtn)){
+        // start HUD dragging
+        startHUDDrag(ev);
+      }
+    });
+
+    bar.addEventListener('pointerup', (ev) => {
+      if(!pointerDownInfo) return;
+      const info = pointerDownInfo;
+      clearTimeout(longPressTimer); longPressTimer = null;
+
+      // if we started HUD dragging, complete it
+      if(isDraggingHUD){
+        endHUDDrag(ev);
+        pointerDownInfo = null;
+        return;
+      }
+
+      // if long-press already handled, nothing else to do
+      if(info.handledLongPress){
+        // short haptics or visual? leave for later
+        pointerDownInfo = null;
+        return;
+      }
+
+      // short tap on a button: open the URL
+      const elapsed = Date.now() - info.time;
+      const moved = info.moved;
+      if(info.targetButton && !moved && elapsed < LONG_PRESS_MS){
+        // treat as quick tap
+        handleTapOnIcon(info.targetButton);
+      } else if(!info.targetButton && !moved && elapsed < LONG_PRESS_MS){
+        // tap on empty bar -> toggle collapse (quick tap)
+        const collapsed = bar.classList.toggle('collapsed');
+        localStorage.setItem(LS_COLLAPSE_KEY, collapsed ? 'true' : 'false');
+        log('collapsed', collapsed);
+      }
+
+      // release pointer capture
+      try{ ev.target.releasePointerCapture(ev.pointerId); }catch(e){}
+
+      pointerDownInfo = null;
+    });
+
+    bar.addEventListener('pointercancel', (ev) => {
+      clearTimeout(longPressTimer); longPressTimer = null;
+      if(isDraggingHUD) endHUDDrag(ev);
+      pointerDownInfo = null;
+    });
+  }
+
+  /* HUD drag implementation */
+  let hudDragState = null; // {startX,startY,startLeft,startTop,barRect}
+  function startHUDDrag(ev){
+    if(isDraggingHUD) return;
+    // don't start HUD drag if pointerdown was on an icon while in editMode (we want icon-drag)
+    if(editMode && pointerDownInfo && pointerDownInfo.targetButton && pointerDownInfo.targetButton !== toggleBtn) return;
+    isDraggingHUD = true;
+    bar.classList.add('dragging');
+    hudDragState = {};
+    hudDragState.startX = ev.clientX; hudDragState.startY = ev.clientY;
+    hudDragState.barRect = bar.getBoundingClientRect();
+    const computed = window.getComputedStyle(bar);
+    let left = parseFloat(computed.left);
+    if(isNaN(left)){
+      const right = parseFloat(computed.right) || 12;
+      left = window.innerWidth - right - hudDragState.barRect.width;
+    }
+    hudDragState.startLeft = left;
+    hudDragState.startTop = parseFloat(computed.top) || hudDragState.barRect.top;
+  }
+
+  function endHUDDrag(ev){
+    if(!isDraggingHUD) return;
+    isDraggingHUD = false;
+    bar.classList.remove('dragging');
+    // compute final
+    const rect = bar.getBoundingClientRect();
+    savePosition(rect.left, rect.top);
+    hudDragState = null;
+  }
+
+  // global pointermove to move HUD smoothly
+  window.addEventListener('pointermove', (ev) => {
+    if(!isDraggingHUD || !hudDragState) return;
+    const dx = ev.clientX - hudDragState.startX;
+    const dy = ev.clientY - hudDragState.startY;
+    const bw = hudDragState.barRect.width, bh = hudDragState.barRect.height;
+    const margin = 8;
+    let newLeft = hudDragState.startLeft + dx;
+    let newTop = hudDragState.startTop + dy;
+    newLeft = Math.max(margin, Math.min(window.innerWidth - bw - margin, newLeft));
+    newTop = Math.max(margin, Math.min(window.innerHeight - bh - margin, newTop));
+    bar.style.left = newLeft + 'px'; bar.style.top = newTop + 'px'; bar.style.right = 'auto';
+  });
+
+  /* handle tap and long-press on icon */
+  function handleTapOnIcon(btn){
+    const url = btn.dataset.url || 'about:blank';
+    // short tap: load url in iframe
+    if(frame) frame.src = url;
+    localStorage.setItem(LS_LAST_URL, url);
+  }
+
+  function handleLongPressOnIcon(btn){
+    const id = btn.dataset.id;
+    if(!id) return;
+    const list = getHiddenList();
+    const idx = list.indexOf(id);
+    if(idx >= 0){
+      list.splice(idx,1);
+      log('unhide', id);
+    } else {
+      list.push(id);
+      log('hide', id);
+    }
+    setHiddenList(list);
+    applyHiddenFromStorage();
+  }
+
+  /* toggle interactions (tap vs long-press) */
+  function attachToggleHandlers(){
+    // toggle: short tap toggles collapse; long-press toggles edit mode (handled via pointer logic)
+    toggleBtn.addEventListener('click', (e) => {
+      // if click happens after long-press, pointer logic will have toggled editMode, so ignore double effect.
+      if(editMode) return;
+      const collapsed = bar.classList.toggle('collapsed');
+      localStorage.setItem(LS_COLLAPSE_KEY, collapsed ? 'true' : 'false');
+      log('collapsed', collapsed);
+    });
+  }
+
+  /* EDIT MODE: drag icons to reorder or remove (drag to trash) */
+  function prepareEditDragDrop(){
+    // use HTML5 drag/drop but we need to set draggable attr when editMode
+    bar.querySelectorAll('.symbol-button[data-id]').forEach(btn => {
+      btn.addEventListener('dragstart', (e) => {
+        if(!editMode) { e.preventDefault(); return; }
+        draggedIconId = btn.dataset.id;
+        e.dataTransfer.setData('text/plain', draggedIconId);
+        e.dataTransfer.effectAllowed = 'move';
+        // show trash
+        trash.classList.add('visible');
+        setTimeout(()=> btn.classList.add('dragging-temp'), 20);
+      });
+      btn.addEventListener('dragend', (e) => {
+        cleanupAfterDrag();
+      });
+    });
+
+    // wrappers accept drop to reorder
+    bar.querySelectorAll('.symbol-wrap').forEach(w => {
+      w.addEventListener('dragover', (e) => {
+        if(!editMode) return;
+        e.preventDefault();
+        w.classList.add('dragover');
+      });
+      w.addEventListener('dragleave', () => w.classList.remove('dragover'));
+      w.addEventListener('drop', (e) => {
+        if(!editMode) return;
+        e.preventDefault();
+        const id = e.dataTransfer.getData('text/plain');
+        if(!id) return;
+        const src = bar.querySelector(`.symbol-button[data-id="${id}"]`)?.closest('.symbol-wrap');
+        if(!src || src === w) return;
+        bar.insertBefore(src, w);
+        saveOrderToStorage();
+      });
+    });
+
+    // trash drop
+    trash.addEventListener('dragover', (e) => { if(!editMode) return; e.preventDefault(); trash.classList.add('over'); });
+    trash.addEventListener('dragleave', () => trash.classList.remove('over'));
+    trash.addEventListener('drop', (e) => {
+      if(!editMode) return;
+      e.preventDefault();
+      const id = e.dataTransfer.getData('text/plain');
+      if(!id) return;
+      // add to hidden and remove DOM
+      const arr = getHiddenList(); if(!arr.includes(id)) arr.push(id); setHiddenList(arr);
+      const wrap = bar.querySelector(`.symbol-button[data-id="${id}"]`)?.closest('.symbol-wrap');
+      if(wrap) wrap.remove();
+      saveOrderToStorage();
+      cleanupAfterDrag();
+    });
+  }
+
+  function cleanupAfterDrag(){
+    draggedIconId = null;
+    trash.classList.remove('visible','over');
+    bar.querySelectorAll('.symbol-wrap').forEach(w => w.classList.remove('dragover'));
+    bar.querySelectorAll('.symbol-button').forEach(b => b.classList.remove('dragging-temp'));
+  }
+
+  /* toggle edit mode */
+  function toggleEditMode(enable){
+    editMode = !!enable;
+    bar.classList.toggle('edit-mode', editMode);
+    // set draggable attr on buttons
+    bar.querySelectorAll('.symbol-button[data-id]').forEach(b => {
+      try{ b.draggable = editMode; }catch(e){}
+    });
+    if(editMode){
+      trash.classList.add('visible');
+      hint.textContent = 'EDIT MODE: arraste ícones para reorganizar / arraste pra lixeira para remover • Long-press no ≡ para sair';
+    } else {
+      trash.classList.remove('visible');
+      hint.textContent = 'Toque = abrir • Pressão longa = ocultar/editar';
+      // save order when leaving edit mode
+      saveOrderToStorage();
+    }
+    log('editMode', editMode);
+  }
+
+  /* keyboard fallback: keep R reset if user has keyboard */
+  bar.addEventListener('keydown', (e) => {
+    if(e.key === 'r' || e.key === 'R'){
+      if(confirm('Resetar HUD (posição, ordem, ocultações)?')) {
+        localStorage.removeItem(LS_POS_KEY); localStorage.removeItem(LS_ORDER_KEY); localStorage.removeItem(LS_HIDDEN_KEY); localStorage.removeItem(LS_COLLAPSE_KEY);
+        bar.style.left=''; bar.style.top=''; bar.style.right='12px'; bar.classList.remove('collapsed'); applyHiddenFromStorage(); applyOrderFromStorage();
+        log('HUD resetado');
+      }
+    }
+  });
+
+  /* utils */
+  function getHiddenList(){ try{const r=localStorage.getItem(LS_HIDDEN_KEY); return r?JSON.parse(r):[];}catch(e){return []} }
+  function setHiddenList(v){ localStorage.setItem(LS_HIDDEN_KEY, JSON.stringify(v)); }
+  function saveOrderToStorage(){ const ids=[]; bar.querySelectorAll('.symbol-button[data-id]').forEach(b=>ids.push(b.dataset.id)); localStorage.setItem(LS_ORDER_KEY, JSON.stringify(ids)); log('order saved',ids); }
+
+  // Ensure initial order saved
+  saveOrderToStorage();
+
+  // ensure window resize keeps HUD inside bounds
+  window.addEventListener('resize', ()=> {
+    try{
+      const rect = bar.getBoundingClientRect();
+      let left = parseFloat(bar.style.left); let top = parseFloat(bar.style.top);
+      const bw = rect.width, bh = rect.height;
+      let changed=false;
+      if(isNaN(left) || (left + bw) > window.innerWidth - 8){ left = Math.max(8, Math.min(window.innerWidth - bw - 8, isNaN(left) ? (window.innerWidth - bw - 12) : left)); bar.style.left = left + 'px'; changed=true; }
+      if(isNaN(top) || (top + bh) > window.innerHeight - 8){ top = Math.max(8, Math.min(window.innerHeight - bh - 8, isNaN(top) ? 40 : top)); bar.style.top = top + 'px'; changed=true; }
+      if(changed) savePosition(left, top);
+    }catch(e){}
+  });
+
+})();
+</script>
+</body>
+</html>
+
