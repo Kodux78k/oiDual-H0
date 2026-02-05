@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Dual.Infodose Lite</title>
+
+<style>
+  /* -------------------------------------------------
+     Layout container
+  ------------------------------------------------- */
+  .wrap {
+    width: 100%;
+    height: 100%;
+min-height:100vh;
+    position: relative;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* -------------------------------------------------
+     Iframe area
+  ------------------------------------------------- */
+  .content {
+    flex: 1;
+    position: relative;
+    display: flex;
+  }
+  iframe#frame {
+    width: 100%;
+    height: 100%;
+min-height:100vh;
+    border: 0;
+    transition: opacity .4s;
+    opacity: 1;
+  }
+
+  /* -------------------------------------------------
+     Symbol bar (right‑hand dock)
+  ------------------------------------------------- */
+  .symbol-bar {
+    position: fixed;
+    right: 12px;
+    top: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 60;
+  }
+  .symbol-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    font-size: 1.2rem;
+  }
+  .symbol-button:hover {
+    transform: scale(1.06);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="content">
+    <iframe id="frame"
+            src="about:blank"
+            title="Dual Infodose frame"></iframe>
+  </div>
+
+  <!-- Symbol bar -->
+  <div class="symbol-bar" aria-hidden>
+    <button class="symbol-button" data-url="about:blank">Φ</button>
+    <button class="symbol-button" data-url="https://kodux78k.github.io/oiDual-Vivivi-1/">꩜</button>
+    <button class="symbol-button" data-url="https://kodux78k.github.io/oiDual-idHome/">◌</button>
+    <button class="symbol-button" data-url="https://kodux78k.github.io/Unouno-/index.html">☼</button>
+    <button class="symbol-button" data-url="https://kodux78k.github.io/oiDual-tst1/">◑</button>
+    <button class="symbol-button" data-url="https://kodux78k.github.io/info-Doc/index.html">◘</button>
+  </div>
+</div>
+
+<script>
+/* -------------------------------------------------
+   Helper – replace with your own logger if you have one
+------------------------------------------------- */
+function logMistico(...msg) {
+  console.log('[Dual.Infodose]', ...msg);
+}
+
+/* -------------------------------------------------
+   Load a URL into the iframe and store it in localStorage
+------------------------------------------------- */
+function loadPage(url) {
+  const frame = document.getElementById('frame');
+  if (!frame) return;
+
+  frame.src = url;
+  // Save the current URL so it survives a page refresh
+  localStorage.setItem('dual_last', url);
+}
+
+/* -------------------------------------------------
+   Symbol‑bar click handling
+------------------------------------------------- */
+document.querySelectorAll('.symbol-button').forEach(btn => {
+  // Left‑click → load the linked page
+  btn.addEventListener('click', () => {
+    const url = btn.dataset.url || 'about:blank';
+    loadPage(url);
+  });
+
+  // Right‑click → open the URL in a new tab *and* show a tiny hint
+  btn.addEventListener('contextmenu', e => {
+    e.preventDefault();                     // suppress the default context menu
+    const url = btn.dataset.url || 'about:blank';
+    const label = btn.textContent || '•';
+    logMistico(`Editar símbolo: ${label} → ${url}`);
+
+    // Open the URL in a new tab (or you could open a popup editor here)
+    window.open(url, '_blank');
+  });
+});
+
+/* -------------------------------------------------
+   Initialise the app
+------------------------------------------------- */
+(function init() {
+  logMistico('Dual.Infodose LITe inicializado');
+
+  const frame = document.getElementById('frame');
+  if (!frame) return;
+
+  // ---- 1️⃣ Load the last‑used page (if any) -----------------
+  const saved = localStorage.getItem('dual_last');
+  if (saved) {
+    frame.src = saved;
+  }
+
+  // ---- 2️⃣ Whenever the iframe finishes loading, remember the URL ---
+  frame.addEventListener('load', () => {
+    localStorage.setItem('dual_last', frame.src);
+  });
+})();
+</script>
+</body>
+</html>
