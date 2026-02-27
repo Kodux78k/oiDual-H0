@@ -1,22 +1,142 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Dual.Infodose — LITe</title>
-<link rel="icon" href="assets/icons/icon-192.png" type="image/png"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Dual.Infodose — Smart HUD</title>
+
+<!-- iOS Support -->
+
+<link rel="apple-touch-icon" href="./icon-192.png">
+
 <!-- Manifest -->
 <link rel="manifest" href="./manifest.json">
+ 
+<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-DH10.css">
+<style>
+  :root {
+    --bg-blur: rgba(10, 12, 20, 0.75);
+    --card-bg: rgba(20, 22, 32, 0.85);
+    --text: #f0f3f9;
+    --muted: rgba(255, 255, 255, 0.45);
+    --accent: #32d7cb;
+    --danger: #ff5e5e;
+    --border: rgba(255, 255, 255, 0.1);
+  }
 
+  html, body { 
+    height: 100%; margin: 0; padding: 0; color: var(--text); 
+    background:rgba(0,0,0,0);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow: auto;
+  }
   
-<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-DH10.css"> 
+  .wrap { width: 100%; min-height: 100vh; height: 100%;display: flex; flex-direction: column; }
+  iframe#frame { width: 100%; min-height: 100vh;height: 100%; border: 0; border-radius:8px;transition: opacity .3s; }
 
+  /* Barra de Símbolos */
+  .symbol-bar {
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    background: var(--bg-blur);
+    backdrop-filter: blur(15px) saturate(160%);
+    -webkit-backdrop-filter: blur(15px) saturate(160%);
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    transition: 
+      opacity 0.8s ease, 
+      left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+      top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+      border-radius 0.3s ease,
+      padding 0.3s ease;
+    user-select: none;
+    touch-action: none;
+    opacity: 1;
+  }
+
+  /* Estado Inativo */
+  .symbol-bar.idle { opacity: 0.15; }
+  .symbol-bar.idle:hover { opacity: 1; }
+
+  /* Variações de Snap */
+  .symbol-bar.snap-side { flex-direction: column; border-radius: 0 20px 20px 0; border-left: 0; }
+  .symbol-bar.snap-side-right { flex-direction: column; border-radius: 20px 0 0 20px; border-right: 0; }
+  
+  /* Snap Topo: Centralizado e Horizontal */
+  .symbol-bar.snap-top { 
+    flex-direction: row; 
+    border-radius: 0 0 20px 20px; 
+    border-top: 0; 
+    align-items: center;
+    justify-content: center;
+  }
+
+  .symbol-bar.floating { flex-direction: column; border-radius: 24px; }
+
+  /* Botões */
+  .symbol-button {
+    width: 28px; height: 28px; border-radius: 12px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--card-bg);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  
+  .symbol-button:active { transform: scale(0.9); }
+  .symbol-button.toggle { 
+    background: linear-gradient(135deg, #1a1d29, #0f111a);
+    color: var(--accent);
+    border-color: rgba(50, 215, 203, 0.4);
+    font-weight: bold;
+  }
+
+  /* Recolhimento */
+  .symbol-bar.collapsed .symbol-wrap { 
+    width: 0; height: 0; margin: 0; opacity: 0; pointer-events: none; transform: scale(0);
+  }
+  .symbol-bar.collapsed.snap-side, .symbol-bar.collapsed.snap-side-right { padding: 10px 5px; }
+  .symbol-bar.collapsed.snap-top { padding: 5px 10px; }
+
+  .symbol-wrap {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+
+ /* .hint { font-size: 9px; color: var(--muted); text-transform: uppercase; margin-top: 4px; pointer-events: none; text-align: center; display:none;}*/
+  .symbol-bar.snap-top .hint { display: none; }
+  .symbol-bar.snap-top .toggle-wrap { margin-bottom: 0; margin-right: 4px; }
+
+  /* Lixeira */
+  .trash {
+    position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%) scale(0.8);
+    width: 60px; height: 60px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255, 60, 60, 0.2);
+    color: var(--danger);
+    border: 2px dashed var(--danger);
+    z-index: 10001; opacity: 0; transition: all 0.3s ease; pointer-events: none;
+  }
+  .trash.visible { opacity: 1; transform: translateX(-50%) scale(1); pointer-events: auto; }
+  .trash.over { background: var(--danger); color: white; transform: translateX(-50%) scale(1.2); }
+
+  .edit-mode { outline: 2px dashed var(--accent); outline-offset: 4px; }
+</style>
 </head>
 <body>
 
-<div class="main-wrapper">
-  <!-- Conteúdo Principal -->
-  <iframe id="content-frame" src="about:blank"></iframe>
+<div class="wrap">
+  <div class="content">
+    <iframe id="frame" src="about:blank"></iframe>
+  </div>
 
   <!-- HUD Inteligente -->
   <div class="symbol-bar floating" id="symbolBar">
@@ -37,19 +157,211 @@
       </button>
     </div>
 
-    <!-- Atalhos Externos (Símbolos do Dual) -->
-    <div class="symbol-wrap"><button class="symbol-button" data-url="about:blank">◌</button></div>
-    <div class="symbol-wrap"><button class="symbol-button" data-url="https://kodux78k.github.io/oiDual-idHome/">꩜</button></div>
-        <div class="symbol-wrap"><button class="symbol-button" data-url="https://kodux78k.github.io/info-Doc/index.html">꩜</button></div>
-            <div class="symbol-wrap"><button class="symbol-button" data-url="https://kodux78k.github.io/Unouno-/">꩜</button></div>
-    <div class="hud-info" id="hudStatus">KOBLLUX</div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="phi" data-url="about:blank">Φ</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual-Vivivi-1/">꩜</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="home" data-url="https://kodux78k.github.io/oiDual-idHome/">◌</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="uno" data-url="https://kodux78k.github.io/Unouno-/index.html">☼</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="tst" data-url="https://kodux78k.github.io/oiDual-tst1/">◑</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-id="doc" data-url="https://kodux78k.github.io/info-Doc/index.html">◘</button></div>
+
+
   </div>
 
-  <div id="kob-tts-outline"></div>
+  <div class="trash" id="trash">✕</div>
 </div>
 
+<script>
+(function(){
+  const bar = document.getElementById('symbolBar');
+  const toggleBtn = document.getElementById('toggleBtn');
+  const frame = document.getElementById('frame');
+  const trash = document.getElementById('trash');
+  const hint = document.getElementById('hudHint');
 
+  let idleTimer, longPressTimer;
+  let isDragging = false;
+  let editMode = false;
+  let startPos = { x: 0, y: 0 };
+  
+  const IDLE_TIME = 10000;
+  const SNAP_THRESHOLD = 40;
 
+  function init(){
+    const last = localStorage.getItem('dual_last');
+    if(last) frame.src = last;
+
+    const savedPos = JSON.parse(localStorage.getItem('dual_pos') || '{"x":20, "y":200}');
+    applyPosition(savedPos.x, savedPos.y);
+    
+    if(localStorage.getItem('dual_coll') === 'true') bar.classList.add('collapsed');
+
+    resetIdleTimer();
+    setupEvents();
+    setupDragDrop();
+  }
+
+  function resetIdleTimer(){
+    bar.classList.remove('idle');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      if(!editMode) bar.classList.add('idle');
+    }, IDLE_TIME);
+  }
+
+  function setupEvents(){
+    ['mousedown', 'touchstart', 'mousemove', 'touchmove'].forEach(evt => {
+      window.addEventListener(evt, resetIdleTimer, {passive: true});
+    });
+
+    bar.addEventListener('pointerdown', e => {
+      const btn = e.target.closest('.symbol-button');
+      startPos = { 
+        x: e.clientX, 
+        y: e.clientY, 
+        offsetX: e.clientX - bar.offsetLeft, 
+        offsetY: e.clientY - bar.offsetTop 
+      };
+      isDragging = false;
+      
+      longPressTimer = setTimeout(() => {
+        if(!isDragging) {
+          if(btn === toggleBtn) toggleEdit(!editMode);
+          else if(btn) toggleVisibility(btn);
+        }
+      }, 600);
+
+      bar.setPointerCapture(e.pointerId);
+    });
+
+    bar.addEventListener('pointermove', e => {
+      if(startPos.x === 0) return;
+      const dist = Math.hypot(e.clientX - startPos.x, e.clientY - startPos.y);
+      
+      if(dist > 10) {
+        isDragging = true;
+        clearTimeout(longPressTimer);
+        moveBar(e.clientX, e.clientY);
+      }
+    });
+
+    bar.addEventListener('pointerup', e => {
+      clearTimeout(longPressTimer);
+      if(!isDragging) {
+        const btn = e.target.closest('.symbol-button');
+        if(btn === toggleBtn) {
+          const col = bar.classList.toggle('collapsed');
+          localStorage.setItem('dual_coll', col);
+          // Recalcular snap após colapso para manter alinhamento
+          setTimeout(snapToEdges, 310);
+        } else if(btn) {
+          loadUrl(btn);
+        }
+      } else {
+        snapToEdges();
+      }
+      startPos.x = 0;
+    });
+  }
+
+  function moveBar(clientX, clientY){
+    bar.style.transition = 'none';
+    let x = clientX - startPos.offsetX;
+    let y = clientY - startPos.offsetY;
+    applyPosition(x, y, true);
+  }
+
+  function applyPosition(x, y, isMoving = false){
+    const maxX = window.innerWidth - bar.offsetWidth;
+    const maxY = window.innerHeight - bar.offsetHeight;
+    
+    x = Math.max(0, Math.min(maxX, x));
+    y = Math.max(0, Math.min(maxY, y));
+
+    bar.style.left = x + 'px';
+    bar.style.top = y + 'px';
+    
+    // Atualiza classes de snap visual
+    bar.classList.remove('snap-side', 'snap-side-right', 'snap-top', 'floating');
+    
+    if(y <= SNAP_THRESHOLD) {
+      bar.classList.add('snap-top');
+    } else if(x <= SNAP_THRESHOLD) {
+      bar.classList.add('snap-side');
+    } else if(x >= maxX - SNAP_THRESHOLD) {
+      bar.classList.add('snap-side-right');
+    } else {
+      bar.classList.add('floating');
+    }
+  }
+
+  function snapToEdges(){
+    bar.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    const r = bar.getBoundingClientRect();
+    let x = r.left, y = r.top;
+
+    // Lógica de Grudar Inteligente
+    if(y < SNAP_THRESHOLD) {
+      y = 0;
+      // Centralizar horizontalmente se estiver no topo
+      x = (window.innerWidth - r.width) / 2;
+    } else {
+      if(x < SNAP_THRESHOLD) x = 0;
+      if(x > window.innerWidth - r.width - SNAP_THRESHOLD) x = window.innerWidth - r.width;
+    }
+
+    applyPosition(x, y);
+    localStorage.setItem('dual_pos', JSON.stringify({x, y}));
+  }
+
+  function loadUrl(btn){
+      if (!btn.dataset.url) return; // segurança
+  const url = btn.dataset.url || 'about:blank';
+  frame.src = url;
+  localStorage.setItem('dual_last', url);
+  }
+  
+
+  function toggleEdit(on){
+    editMode = on;
+    bar.classList.toggle('edit-mode', on);
+    trash.classList.toggle('visible', on);
+    if(on) bar.classList.remove('collapsed');
+    hint.textContent = on ? "Editar" : "Menu";
+    bar.querySelectorAll('.symbol-button[data-id]').forEach(b => b.draggable = on);
+  }
+
+  function toggleVisibility(btn){
+    btn.closest('.symbol-wrap').style.display = 'none';
+  }
+
+  function setupDragDrop(){
+    bar.addEventListener('dragstart', e => {
+      if(!editMode) return e.preventDefault();
+      e.dataTransfer.setData('text', e.target.dataset.id);
+      e.target.style.opacity = '0.4';
+    });
+    bar.addEventListener('dragend', e => e.target.style.opacity = '1');
+    bar.addEventListener('dragover', e => e.preventDefault());
+    bar.addEventListener('drop', e => {
+      const id = e.dataTransfer.getData('text');
+      const targetWrap = e.target.closest('.symbol-wrap');
+      if(id && targetWrap){
+        const sourceBtn = bar.querySelector(`[data-id="${id}"]`);
+        bar.insertBefore(sourceBtn.closest('.symbol-wrap'), targetWrap);
+      }
+    });
+    trash.addEventListener('dragover', e => { e.preventDefault(); trash.classList.add('over'); });
+    trash.addEventListener('dragleave', () => trash.classList.remove('over'));
+    trash.addEventListener('drop', e => {
+      const id = e.dataTransfer.getData('text');
+      if(id) bar.querySelector(`[data-id="${id}"]`).closest('.symbol-wrap').style.display = 'none';
+      trash.classList.remove('over');
+    });
+  }
+
+  init();
+})();
+</script>
 
 <script src="https://kodux78k.github.io/oiDual--Y-/js/kob-DH10.js"></script>
 
@@ -58,5 +370,6 @@
 <script src="https://kodux78k.github.io/oiDual--Y-/js/kob-glue.js"></script>
 
 <script src="https://kodux78k.github.io/oiDual--Y-/js/kob-home.js"></script>
+</body>
+</html>
 
-</body></html>
