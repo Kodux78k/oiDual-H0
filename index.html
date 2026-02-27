@@ -9,241 +9,53 @@
 <link rel="manifest" href="./manifest.json">
 
   
-  <style>
-  :root{
-    --bg: linear-gradient(180deg,#000,#111);
-    --text:#d7d7d7;
-    --accent: #0ff;
-    --fast:.25s; --med:.6s; --slow:1.2s;
-    --card-bg: rgba(255,255,255,0.03);
-    --glass: rgba(255,255,255,0.04);
-  }
-  html,body{min-height:100vh;height:100%;margin:0;font-family:Montserrat,system-ui,-apple-system; background:var(--bg);
-    color:var(--text);-webkit-font-smoothing:antialiased}
-  .wrap{width:100%;min-height:100vh;height:100%;position:relative;overflow:auto;display:flex;flex-direction:column}
-  /* iframe area */
-  .content{flex:1;position:relative;display:flex}
-  iframe#frame{width:100%;min-height:100vh;height:100%;border:0;transition:opacity .4s;opacity:1}
-  /* symbolbar */
-  .symbol-bar{position:fixed;right:12px;top:40%;display:flex;flex-direction:column;gap:10px;z-index:60}
-  .symbol-button{width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:var(--card-bg);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(6px)}
-  .symbol-button:hover{transform:scale(1.06);box-shadow:0 6px 18px rgba(0,0,0,0.4)}
-  /* controls */
-  .controls{position:fixed;left:16px;top:120px;display:flex;flex-direction:column;gap:10px;z-index:60}
-  .btn{padding:8px 10px;border-radius:8px;background:var(--glass);border:1px solid rgba(255,255,255,0.06);cursor:pointer;color:var(--text)}
-  /* decoder modal */
-  #decoderBox{position:fixed;left:50%;top:18%;transform:translateX(-50%);background:rgba(0,0,0,0.8);padding:12px;border-radius:12px;backdrop-filter:blur(6px);z-index:90;display:none}
-  #decoderBox input{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);}
-  /* pulsos log */
-  #pulsos-container{position:fixed;left:50%;top:18%;transform:translateX(-50%);max-width:640px;width:78%;z-index:-1;pointer-events:none}
-  #pulsos{pointer-events:auto;background:rgba(0,0,0,0.45);padding:8px;border-radius:10px;max-height:220px;overflow:auto;color:var(--accent);font-family:monospace}
-  /* small footer */
-  .footer{position:fixed;left:20px;right:20px;bottom:12px;text-align:center;z-index:60;color:rgba(215,215,215,0.7);font-size:0.9em}
-  /* responsive */
-  @media (max-width:600px){ .symbol-bar{right:8px;top:30%} .controls{left:8px;top:90px} #pulsos{max-height:140px} }
-  
-  html,
-body {
-  background: transparent !important;
-}
-</style>
+<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-DH10.css"> 
+
 </head>
 <body>
-<div class="wrap">
-  <div class="content">
-    <iframe id="frame" src="about:blank" title="Dual Infodose frame"></iframe>
-  </div>
 
-  <div class="symbol-bar" aria-hidden>
-    <button class="symbol-button" data-url="about:blank">Φ</button>
-    <button class="symbol-button" data-url="https://kodux78k.github.io/oiDual-Vivivi-1/">꩜</button>
-    <button class="symbol-button" data-url="https://kodux78k.github.io/oiDual-idHome/">◌</button>
-    <button class="symbol-button" data-url="https://kodux78k.github.io/Unouno-/index.html">☼</button>
-    <button class="symbol-button" data-url="https://kodux78k.github.io/oiDual-tst1/">◑</button>
-    <button class="symbol-button" data-url="https://kodux78k.github.io/info-Doc/index.html">◘</button>
-  </div>
+<div class="main-wrapper">
+  <!-- Conteúdo Principal -->
+  <iframe id="content-frame" src="about:blank"></iframe>
 
-  <div class="controls" role="region" aria-label="Controles">
-    <input id="uploadHTML" type="file" accept=".html" style="display:none">
-    <button id="uploadComponentBtn" class="btn" title="Carregar HTML local">⧉</button>
-    <button id="remoteComponentBtn" class="btn" title="Abrir componente remoto"> ☍ </button>
-    <button id="toggleDecoderBtn" class="btn" title="Abrir decodificador">✦</button>
-  </div>
-
-  <div id="decoderBox" aria-hidden="true">
-    <div style="display:flex;gap:8px;align-items:center">
-      <input id="codeInput" placeholder="Selo (ex: DUAL)" />
-      <button id="decodeBtn" class="btn">Abrir</button>
-      <button id="closeDecoder" class="btn">✖</button>
+  <!-- HUD Inteligente -->
+  <div class="symbol-bar floating" id="symbolBar">
+    <div class="toggle-wrap">
+      <button class="symbol-button main-toggle" id="toggleBtn" title="Menu / Iniciar">≡</button>
     </div>
+
+    <!-- Controles de Navegação de Leitura -->
+    <div class="symbol-wrap"><button class="symbol-button" id="btn-prev" title="Voltar Bloco">◀</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" id="btn-play" title="Play/Pause">▶</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" id="btn-next" title="Próximo Bloco">▶▶</button></div>
+
+    <!-- Troca de Arquétipo -->
+    <div class="symbol-wrap">
+      <button class="symbol-button" id="btn-arch" title="Trocar Arquétipo de Voz">
+        🎙
+        <div class="voice-indicator"></div>
+      </button>
+    </div>
+
+    <!-- Atalhos Externos (Símbolos do Dual) -->
+    <div class="symbol-wrap"><button class="symbol-button" data-url="https://kodux78k.github.io/oiDual-idHome/">◌</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" data-url="about:blank">꩜</button></div>
+
+    <div class="hud-info" id="hudStatus">KOBLLUX</div>
   </div>
 
-<div id="pulsos-container" aria-hidden style="display:none;">
-  <div id="pulsos"></div>
-</div>
-  </div>
-
- <!-- <p class="footer">Do seu jeito. <strong>Sempre</strong> único. <strong>Sempre</strong> seu.</p> -->
+  <div id="kob-tts-outline"></div>
 </div>
 
-<!-- lightweight web component modal for remote/local pages -->
-<script>
-  class MyFrameLoader extends HTMLElement {
-    constructor(){
-      super();
-      this.attachShadow({mode:'open'});
-      this.shadowRoot.innerHTML = `
-        <style>
-          .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1}
-          .box{width:92%;height:86%;background:#071017;border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
-          .top{display:flex;justify-content:flex-end;padding:8px}
-          button{background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer;padding:6px}
-          iframe{flex:1;border:0}
-        </style>
-        <div class="overlay">
-          <div class="box">
-            <div class="top"><button class="close">✖</button></div>
-            <iframe></iframe>
-          </div>
-        </div>`;
-      this.iframe = this.shadowRoot.querySelector('iframe');
-      this.shadowRoot.querySelector('.close').onclick = ()=> this.remove();
-    }
-    set src(v){ this.iframe.src = v; }
-  }
-  customElements.define('my-frame-loader', MyFrameLoader);
-</script>
 
-<script>
-(function(){
-  const frame = document.getElementById('frame');
-  const uploadInput = document.getElementById('uploadHTML');
-  const uploadBtn = document.getElementById('uploadComponentBtn');
-  const remoteBtn = document.getElementById('remoteComponentBtn');
-  const toggleDecoderBtn = document.getElementById('toggleDecoderBtn');
-  const decoderBox = document.getElementById('decoderBox');
-  const decodeBtn = document.getElementById('decodeBtn');
-  const closeDecoder = document.getElementById('closeDecoder');
-  const codeInput = document.getElementById('codeInput');
-  const pulsos = document.getElementById('pulsos');
 
-  const CODE_MAP = {
-    "DUAL":"menu.html",
-    "KBX":"menu-x-1.html",
-    "ATVR":"render-response.html",
-    "337":"KOBLLUX_MetaLux_CLEANED.html"
-  };
 
-  function logMistico(msg){
-    const el = document.createElement('div');
-    el.className = 'debug';
-    el.textContent = '◉ ' + msg;
-    pulsos.prepend(el);
-    // auto-trim
-    while(pulsos.children.length > 80) pulsos.removeChild(pulsos.lastChild);
-  }
+<script src="https://kodux78k.github.io/oiDual--Y-/js/kob-DH10.js"></script>
 
-  // load page into main iframe (with small fade)
-  function loadPage(url){
-    frame.style.opacity = 0;
-    setTimeout(()=> {
-      frame.src = url;
-      frame.onload = ()=> frame.style.opacity = 1;
-    }, 220);
-    logMistico('Carregando: ' + url);
-  }
 
-  // symbol bar clicks
-  document.querySelectorAll('.symbol-button').forEach(b=>{
-    b.addEventListener('click', e=>{
-      const url = b.dataset.url || 'about:blank';
-      loadPage(url);
-    });
-    b.addEventListener('contextmenu', e=>{
-      e.preventDefault();
-      const url = b.dataset.url || 'about:blank';
-      const label = b.textContent || '•';
-      logMistico(`Editar símbolo: ${label} -> ${url} (use editor separado)`);
-    });
-  });
 
-  // upload local HTML into modal viewer
-  uploadBtn.addEventListener('click', ()=> uploadInput.click());
-  uploadInput.addEventListener('change', e=>{
-    const f = e.target.files && e.target.files[0];
-    if (!f) return;
-    if (!f.name.endsWith('.html')) return alert('Selecione um arquivo .html');
-    const r = new FileReader();
-    r.onload = ev=>{
-      const blob = new Blob([ev.target.result], {type:'text/html'});
-      const url = URL.createObjectURL(blob);
-      const modal = document.createElement('my-frame-loader');
-      modal.src = url;
-      document.body.appendChild(modal);
-      logMistico('Preview local: ' + f.name);
-    };
-    r.readAsText(f);
-  });
+<script src="https://kodux78k.github.io/oiDual--Y-/js/kob-glue.js"></script>
 
-  // remote component modal
-  remoteBtn.addEventListener('click', ()=>{
-    const url = prompt('URL do componente remoto:');
-    if (!url) return;
-    const modal = document.createElement('my-frame-loader');
-    modal.src = url;
-    document.body.appendChild(modal);
-    logMistico('Aberto remoto: ' + url);
-  });
+<script src="https://kodux78k.github.io/oiDual--Y-/js/kob-home.js"></script>
 
-  // decoder
-  toggleDecoderBtn.addEventListener('click', ()=>{
-    decoderBox.style.display = decoderBox.style.display === 'none' ? 'block' : 'none';
-    decoderBox.setAttribute('aria-hidden', decoderBox.style.display === 'none');
-  });
-  closeDecoder.addEventListener('click', ()=> decoderBox.style.display = 'none');
-  decodeBtn.addEventListener('click', ()=>{
-    const code = (codeInput.value || '').trim().toUpperCase();
-    if (!code) return alert('Digite o selo');
-    const dest = CODE_MAP[code];
-    if (dest){
-      const modal = document.createElement('my-frame-loader');
-      modal.src = dest;
-      document.body.appendChild(modal);
-      decoderBox.style.display = 'none';
-      logMistico('Selo válidado: ' + code + ' → ' + dest);
-    } else {
-      alert('Selo desconhecido.');
-      logMistico('Selo desconhecido: ' + code);
-    }
-  });
-
-  // simple postMessage integration for pulses from iframe (if desired)
-  window.addEventListener('message', e=>{
-    if (e.data?.type === 'iframeClick'){
-      const x = e.data.x, y = e.data.y;
-      logMistico('Pulso do iframe em ' + x + ',' + y);
-    }
-  });
-
-  // small keyboard shortcuts
-  document.addEventListener('keydown', (ev)=>{
-    if (ev.key === 't' && (ev.ctrlKey || ev.metaKey)){ // ctrl/cmd + t = toggle decoder
-      ev.preventDefault();
-      decoderBox.style.display = decoderBox.style.display === 'none' ? 'block' : 'none';
-    }
-  });
-
-  // init
-  (function init(){
-    logMistico('Dual.Infodose LITe inicializado');
-    // load saved layout (simple example)
-    const last = localStorage.getItem('dual_last');
-    if (last) frame.src = last;
-    // save main iframe changes
-    frame.addEventListener('load', ()=> localStorage.setItem('dual_last', frame.src));
-  })();
-
-})();
-</script>
-</body>
-</html>
+</body></html>
