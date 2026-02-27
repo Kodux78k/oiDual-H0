@@ -4,6 +4,15 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>Dual.Infodose — Smart HUD</title>
+
+<!-- iOS Support -->
+
+<link rel="apple-touch-icon" href="./icon-192.png">
+
+<!-- Manifest -->
+<link rel="manifest" href="./manifest.json">
+ 
+<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-DH10.css">
 <style>
   :root {
     --bg-blur: rgba(10, 12, 20, 0.75);
@@ -129,9 +138,23 @@
     <iframe id="frame" src="about:blank"></iframe>
   </div>
 
+  <!-- HUD Inteligente -->
   <div class="symbol-bar floating" id="symbolBar">
     <div class="toggle-wrap">
-      <button class="symbol-button toggle" id="toggleBtn">≡</button>
+      <button class="symbol-button main-toggle" id="toggleBtn" title="Menu / Iniciar">≡</button>
+    </div>
+
+    <!-- Controles de Navegação de Leitura -->
+    <div class="symbol-wrap"><button class="symbol-button" id="btn-prev" title="Voltar Bloco">◀</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" id="btn-play" title="Play/Pause">▶</button></div>
+    <div class="symbol-wrap"><button class="symbol-button" id="btn-next" title="Próximo Bloco">▶▶</button></div>
+
+    <!-- Troca de Arquétipo -->
+    <div class="symbol-wrap">
+      <button class="symbol-button" id="btn-arch" title="Trocar Arquétipo de Voz">
+        🎙
+        <div class="voice-indicator"></div>
+      </button>
     </div>
 
     <div class="symbol-wrap"><button class="symbol-button" data-id="phi" data-url="about:blank">Φ</button></div>
@@ -337,6 +360,14 @@
   init();
 })();
 </script>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/js/kob-DH10.js"></script>
+
+
+
+<script src="https://kodux78k.github.io/oiDual--Y-/js/kob-glue.js"></script>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/js/kob-home.js"></script>
 </body>
 </html>
 
