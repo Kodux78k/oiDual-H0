@@ -1,176 +1,211 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
+<html lang="pt-BR"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>KOBLLUX TTS Dock - Standalone</title>
 
-  <!-- CSS Externos -->
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/infoDoc.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <!-- Fontes e CSS Externos -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/V-core/css/main.css">
   <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-LVb.css">
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-DH10.css">
+  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-DH10r.css">
   <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/kob-root.css">
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/kob-hud.css">
+  
+<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/kob-hud.css">
 
-  <!-- Estilos Internos (consolidados) -->
+  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/V-core/css/main-root.css">
+
   <style>
     :root {
+      /* Z-index base */
       --z-base: 0;
       --z-content: 100;
       --z-widget: 500;
       --z-overlay: 1000;
       --z-system: 5000;
+      
+      /* Orb settings */
       --orb-speed: 7.8s;
       --kob-voice-primary: #78e3ff;
       --kob-voice-secondary: #b978ff;
       --kob-voice-accent: #ffffff;
     }
 
+    /* Estilos do #root - Background reativo às variáveis de voz */
+    #root {
+      min-height: 100vh;
+      width: 100%;
+      background-color: #0b0c10; /* Fundo escuro base */
+      background-image: 
+        radial-gradient(circle at 10% 50%, color-mix(in srgb, var(--kob-voice-primary) 12%, transparent) 0%, transparent 60%),
+        radial-gradient(circle at 90% 50%, color-mix(in srgb, var(--kob-voice-secondary) 12%, transparent) 0%, transparent 60%);
+      background-attachment: fixed;
+      transition: background-image 0.5s ease;
+    }
+
     /* Container do ORB no botão de arquétipo */
     .orb-microphone-container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
     }
 
     /* Mini orb adaptado para caber no botão */
     .tts-orb-mini {
-      width: 28px;
-      height: 28px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+        width: 28px;
+        height: 28px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .orb {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      position: relative;
-      display: grid;
-      place-items: center;
-      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1);
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        position: relative;
+        display: grid;
+        place-items: center;
+        transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1);
     }
 
     .orb-core {
-      width: 78%;
-      height: 78%;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, var(--kob-voice-accent) 0%, rgba(255,255,255,0.1) 10%, transparent 60%),
-                  radial-gradient(circle at 70% 70%, var(--kob-voice-primary) 0%, var(--kob-voice-secondary) 100%);
-      box-shadow: 0 0 15px var(--kob-voice-primary);
-      animation: orbSpin var(--orb-speed) linear infinite;
+        width: 78%;
+        height: 78%;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, var(--kob-voice-accent) 0%, rgba(255,255,255,0.1) 10%, transparent 60%),
+                    radial-gradient(circle at 70% 70%, var(--kob-voice-primary) 0%, var(--kob-voice-secondary) 100%);
+        box-shadow: 0 0 15px var(--kob-voice-primary);
+        animation: orbSpin var(--orb-speed) linear infinite;
     }
 
     @keyframes orbSpin { 
-      to { transform: rotate(360deg); } 
+        to { transform: rotate(360deg); } 
     }
 
     /* Estado de fala (ativo) */
     .speaking .orb-core {
-      animation: orbSpin 2s linear infinite, orbPulse 0.5s ease-in-out infinite alternate;
+        animation: orbSpin 2s linear infinite, orbPulse 0.5s ease-in-out infinite alternate;
     }
 
     @keyframes orbPulse { 
-      from { transform: scale(1); } 
-      to { transform: scale(1.15); } 
+        from { transform: scale(1); } 
+        to { transform: scale(1.15); } 
     }
 
     /* Indicador de voz original agora integrado ao orb */
     .voice-indicator {
-      position: absolute;
-      top: -2px;
-      right: -2px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #4caf50;
-      box-shadow: 0 0 8px #4caf50;
-      transition: all 0.3s ease;
-      z-index: 10;
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--kob-voice-primary, #4caf50);
+        box-shadow: 0 0 8px var(--kob-voice-primary, #4caf50);
+        transition: all 0.3s ease;
+        z-index: 10;
     }
 
     .voice-indicator.muted {
-      background: #f44336;
-      box-shadow: 0 0 8px #f44336;
+        background: #f44336;
+        box-shadow: 0 0 8px #f44336;
     }
 
     /* Ajuste no botão para acomodar o orb */
     #btn-arch {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      overflow: visible;
-    }
-
-    /* Remove o ícone de microfone padrão se houver */
-    #btn-arch::before {
-      display: none;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        overflow: visible;
     }
   </style>
-</head>
+<style>
+        :root {
+          --z-base: 0;
+          --z-content: 100;
+          --z-widget: 500;
+          --z-overlay: 1000;
+          --z-system: 5000;
+        }
+      </style></head>
 <body>
-  <div id="root">
-    <div class="wrap">
-      <div class="content">
-        <iframe id="frame" src="about:blank"></iframe>
-      </div>
 
-      <!-- HUD Inteligente -->
-      <div class="symbol-bar floating" id="symbolBar">
-        <div class="toggle-wrap">
-          <button class="symbol-button main-toggle" id="toggleBtn" title="Menu / Iniciar">≡</button>
-        </div>
+<div id="root">
 
-        <!-- Controles de Navegação de Leitura -->
-        <div class="symbol-wrap"><button class="symbol-button" id="btn-prev" title="Voltar Bloco">◀</button></div>
-        <div class="symbol-wrap"><button class="symbol-button" id="btn-play" title="Play/Pause">▶</button></div>
-        <div class="symbol-wrap"><button class="symbol-button" id="btn-next" title="Próximo Bloco">▶▶</button></div>
+<script src="https://kodux78k.github.io/oiDual--Y-/js/kob-LVb.js"></script>
 
-        <!-- Troca de Arquétipo com ORB integrado -->
-        <div class="symbol-wrap">
-          <button class="symbol-button" id="btn-arch" title="Trocar Arquétipo de Voz">
-            <div class="orb-microphone-container">
-              <div class="tts-orb-mini">
-                <div class="orb" id="main-orb">
-                  <div class="orb-core"></div>
-                </div>
-              </div>
-              <div class="voice-indicator" id="voiceIndicator"></div>
-            </div>
-          </button>
-        </div>
-
-        <!-- Botões de Arquétipo (cada um carrega uma URL) -->
-        <div class="symbol-wrap"><button class="symbol-button" data-id="phi" data-url="about:blank">Φ</button></div>
-        <div class="symbol-wrap"><button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual-Vivivi-1/">꩜</button></div>
-        <div class="symbol-wrap"><button class="symbol-button" data-id="home" data-url="https://kodux78k.github.io/oiDual-idHome/">◌</button></div>
-
-        <!-- Botões adicionais (comentados no original, mas podem ser ativados) -->
-        <!-- 
-        <div class="symbol-wrap"><button class="symbol-button" data-id="uno" data-url="https://kodux78k.github.io/Unouno-/index.html">☼</button></div>
-        <div class="symbol-wrap"><button class="symbol-button" data-id="tst" data-url="https://kodux78k.github.io/oiDual-tst1/">◑</button></div>
-        -->
-
-        <div class="symbol-wrap"><button class="symbol-button" data-id="doc" data-url="https://kodux78k.github.io/info-Doc/index.html">📚</button></div>
-
-        <div class="hud-info" id="hudStatus">KOBLLUX</div>
-      </div>
-
-      <div id="kob-tts-outline"></div>
-    </div>
+<div class="wrap">
+  <div class="content">
+    <iframe id="frame" src="about:blank"></iframe>
+    <div id="kob-tts-outline"></div>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://kodux78k.github.io/oiDual--Y-/js/kob-LVb.js"></script>
-  <script type="module" src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kobdh0-main.js"></script>
-</body>
-</html>
+  <!-- HUD Inteligente -->
+  <div class="symbol-bar floating" id="symbolBar">
+    
+    <!-- Botão Menu -->
+    <div class="toggle-wrap">
+      <button class="symbol-button main-toggle" id="toggleBtn" title="Menu / Iniciar">≡</button>
+    </div>
+
+    <!-- Controles de Navegação de Leitura -->
+    <div class="symbol-wrap">
+      <button class="symbol-button" id="btn-prev" title="Voltar Bloco">◀</button>
+    </div>
+    <div class="symbol-wrap">
+      <button class="symbol-button" id="btn-play" title="Play/Pause">▶</button>
+    </div>
+    <div class="symbol-wrap">
+      <button class="symbol-button" id="btn-next" title="Próximo Bloco">▶▶</button>
+    </div>
+
+    <!-- Troca de Arquétipo com ORB integrado (Sempre visível) -->
+    <button class="symbol-button" id="btn-arch" title="Trocar Arquétipo de Voz">
+      <div class="orb-microphone-container">
+        <div class="tts-orb-mini">
+          <div class="orb" id="main-orb">
+            <div class="orb-core"></div>
+          </div>
+        </div>
+<!--
+        <div class="voice-indicator" id="voiceIndicator"></div> -->
+
+      </div>
+    </button>
+
+    <!-- Outros atalhos -->
+    <div class="symbol-wrap">
+      <button class="symbol-button" data-id="phi" data-url="about:blank">Φ</button>
+    </div>
+    <div class="symbol-wrap">
+      <button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual-Vivivi-1/">꩜</button>
+    </div>
+    <div class="symbol-wrap">
+      <button class="symbol-button" data-id="home" data-url="https://kodux78k.github.io/oiDual-idHome/">◌</button>
+    </div>
+    <div class="symbol-wrap">
+      <button class="symbol-button" data-id="doc" data-url="https://kodux78k.github.io/info-Doc/index.html">◘</button>
+    </div>
+
+    <div class="hud-info" id="hudStatus">KOBLLUX · ORB NEXUS</div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script type="module" src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kobdh0-main.js"></script>
+
+</div>
+
+
+
+
+
+
+
+</body></html>
