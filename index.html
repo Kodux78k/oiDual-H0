@@ -122,24 +122,29 @@
 
 const dock = document.querySelector('.kob-tts-dock');
 
-let idleTimer;
+if (dock) {
 
-function resetIdle(){
-  dock.classList.remove('idle');
+  let idleTimer;
 
-  clearTimeout(idleTimer);
-  idleTimer = setTimeout(()=>{
-    dock.classList.add('idle');
-  }, 1780); // 1780  mili segundos parado
+  function resetIdle(){
+    dock.classList.remove('idle');
+
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(()=>{
+      dock.classList.add('idle');
+    }, 1780); // 1780 ms parado
+  }
+
+  /* eventos que despertam o dock */
+  ['pointerdown','pointermove','touchstart','mousemove']
+  .forEach(ev=>{
+    dock.addEventListener(ev, resetIdle, { passive:true });
+  });
+
+  resetIdle();
+
 }
 
-/* eventos que despertam o dock */
-['pointerdown','pointermove','touchstart','mousemove']
-.forEach(ev=>{
-  document.addEventListener(ev, resetIdle, {passive:true});
-});
-
-resetIdle();
 </script>
 
 
