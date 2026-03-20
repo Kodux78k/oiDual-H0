@@ -15,40 +15,26 @@
 <!-- Manifest -->
 <link rel="manifest" href="./manifest.json">
 
-<!-- CSS Safe Area Fix -->
-<style>
-  html, body {
-    margin: 0; padding: 0;
-    width: 100%; height: 100%;
-    overscroll-behavior-y: none; 
-  }
-  body {
-    min-height: 100vh;
-    min-height: 100dvh;
-    /* padding-top: env(safe-area-inset-top); */
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
-</style>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&amp;display=swap" rel="stylesheet">
-  <!-- Fontes e CSS Externos 
+  <!-- Fontes e CSS Externos --
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/V-core/css/main.css">
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-LVb.css">
+
   <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-DH10r.css">
   <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/kob-root-aa.css">
     
     <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/base1.css">
-<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/kob-hud.css">-->
+<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/kob-hud.css">
+
+-->
+
+  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-dox-nanai.css">
 
   <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/V-core/css/main-root.css">
     
-      <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-dox-nanai-v4.css">
-    
 
- </head>
+ 
+</head>
 <body>
 
 <div id="root">
@@ -111,9 +97,7 @@
     <div class="hud-info" id="hudStatus">KOBLLUX · ORB NEXUS</div>
   </div>
 </div>
-<!-- Canvas de fundo e overlay -->
-    <canvas id="bg-canvas"></canvas>
-    <div id="arch-overlay" style="opacity:0.4;"></div>
+
 <!-- Scripts -->
 <script type="module" src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kobdh0-main.js"></script>
 
@@ -128,7 +112,7 @@
 
 /* quase invisível */
 .kob-tts-dock.idle{
-  opacity: .12;
+  opacity: .18;
   transform: scale(.92);
 }
 
@@ -150,29 +134,26 @@
 
 const dock = document.querySelector('.kob-tts-dock');
 
-if (dock) {
+let idleTimer;
 
-  let idleTimer;
+function resetIdle(){
+  dock.classList.remove('idle');
 
-  function resetIdle(){
-    dock.classList.remove('idle');
-
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(()=>{
-      dock.classList.add('idle');
-    }, 1780); // 1780 ms parado
-  }
-
-  /* eventos que despertam o dock */
-  ['pointerdown','pointermove','touchstart','mousemove']
-  .forEach(ev=>{
-    dock.addEventListener(ev, resetIdle, { passive:true });
-  });
-
-  resetIdle();
-
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(()=>{
+    dock.classList.add('idle');
+  }, 1870); // 1870  mili segundos parado
 }
 
+/* eventos que despertam o dock */
+['pointerdown','pointermove','touchstart','mousemove']
+.forEach(ev=>{
+  document.addEventListener(ev, resetIdle, {passive:true});
+});
+
+resetIdle();
 </script>
+
+
 
 </body></html>
