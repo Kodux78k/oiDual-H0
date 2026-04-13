@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#0a0c14">
-  <title>KODUX | Super Saiyan Player</title>
+  <title>KODUX | DH0-10-play-SS5</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -26,228 +26,260 @@
       --z-system: 5000;
     }
 
-    /* estado normal */
-    .kob-tts-dock{
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #0a0c14;
+    }
+
+    body {
+      color: white;
+    }
+
+    #bodyPlayer{
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    #bodyPlayer[data-mode="embed"]{
+      min-height: 100vh;
+    }
+
+    #bodyPlayer[data-mode="fullscreen"]{
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #bodyPlayer[data-mode="compact"]{
+      min-height: 100vh;
+    }
+
+    /* idle targets */
+    .kob-tts-dock,
+    #kodux-widget,
+    [data-idle-target]{
       transition: transform .35s ease, opacity .65s ease;
+      will-change: transform, opacity;
       box-shadow: none !important;
     }
 
-#kodux-widget{
-      transition: transform .35s ease, opacity .65s ease;
-    }
-
-    /* quase invisível */
-    .kob-tts-dock.idle, #kodux-widget.idle{
+    .kob-tts-dock.idle,
+    #kodux-widget.idle,
+    [data-idle-target].idle{
       opacity: .18;
       transform: scale(.87);
     }
 
-    /* quando passa o dedo ou mouse */
-    .kob-tts-dock:hover, #kodux-widget:hover{
+    .kob-tts-dock:hover,
+    #kodux-widget:hover,
+    [data-idle-target]:hover{
       opacity: 1;
       transform: scale(1);
     }
   </style>
 </head>
 
-<body class="flex items-center justify-center">
+<body class="bg-[#0a0c14] text-white overflow-hidden">
+  <div id="bodyPlayer" data-mode="player" class="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
+    
+    <div class="absolute inset-0 z-0 opacity-10 pointer-events-none flex items-center justify-center select-none">
+      <h1 id="appTitle" class="text-6xl font-black tracking-[0.5em] text-white">KODUX</h1>
 
-  <div class="absolute inset-0 z-0 opacity-10 pointer-events-none flex items-center justify-center select-none">
-    <h1 id="appTitle" class="text-6xl font-black tracking-[0.5em] text-white">KODUX</h1>
+      <script>
+        const el = document.getElementById('appTitle');
 
-    <script>
-      const el = document.getElementById('appTitle');
+        function getUserName() {
+          return (
+            localStorage.getItem('di_userName') ||
+            localStorage.getItem('userName') ||
+            localStorage.getItem('infodose:username') ||
+            'dual.infodose'
+          );
+        }
 
-      function getUserName() {
-        return (
-          localStorage.getItem('di_userName') ||
-          localStorage.getItem('userName') ||
-          localStorage.getItem('infodose:username') ||
-          'dual.infodose'
-        );
-      }
+        function updateName() {
+          if (el) el.textContent = getUserName().toUpperCase();
+        }
 
-      function updateName() {
-        if (el) el.textContent = getUserName().toUpperCase();
-      }
+        updateName();
+        window.addEventListener('storage', updateName);
+      </script>
+    </div>
 
-      // inicial
-      updateName();
-
-      // escuta mudanças no localStorage (entre abas)
-      window.addEventListener('storage', updateName);
-    </script>
-  </div>
-
-  <div id="root">
-    <div class="wrap">
-      <div class="content">
-        <iframe id="frame" src="oiDual--Y-/M0D/DBZP/"></iframe>
-        <div id="kob-tts-outline"></div>
-      </div>
-
-      <div class="symbol-bar floating" id="symbolBar">
-        
-        <div class="toggle-wrap">
-          <button class="symbol-button main-toggle" id="toggleBtn" title="Menu / Iniciar">≡</button>
+    <div id="root">
+      <div class="wrap">
+        <div class="content">
+          <iframe id="frame" src="oiDual--Y-/M0D/DBZP/"></iframe>
+          <div id="kob-tts-outline"></div>
         </div>
 
-        <div class="symbol-wrap">
-          <button class="symbol-button" id="btn-prev" title="Voltar Bloco">◀</button>
-        </div>
-        <div class="symbol-wrap">
-          <button class="symbol-button" id="btn-play" title="Play/Pause">▶</button>
-        </div>
-        <div class="symbol-wrap">
-          <button class="symbol-button" id="btn-next" title="Próximo Bloco">▶▶</button>
-        </div>
+        <div class="symbol-bar floating" id="symbolBar">
+          <div class="toggle-wrap">
+            <button class="symbol-button main-toggle" id="toggleBtn" title="Menu / Iniciar">≡</button>
+          </div>
 
-        <button class="symbol-button" id="btn-arch" title="Trocar Arquétipo de Voz">
-          <div class="orb-microphone-container">
-            <div class="tts-orb-mini">
-              <div class="orb" id="main-orb">
-                <div class="orb-core"></div>
+          <div class="symbol-wrap">
+            <button class="symbol-button" id="btn-prev" title="Voltar Bloco">◀</button>
+          </div>
+          <div class="symbol-wrap">
+            <button class="symbol-button" id="btn-play" title="Play/Pause">▶</button>
+          </div>
+          <div class="symbol-wrap">
+            <button class="symbol-button" id="btn-next" title="Próximo Bloco">▶▶</button>
+          </div>
+
+          <button class="symbol-button" id="btn-arch" title="Trocar Arquétipo de Voz">
+            <div class="orb-microphone-container">
+              <div class="tts-orb-mini">
+                <div class="orb" id="main-orb">
+                  <div class="orb-core"></div>
+                </div>
               </div>
             </div>
+          </button>
+
+          <div class="symbol-wrap">
+            <button class="symbol-button" data-id="phi" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/DBZP/KOB-SS-play-2.html">Φ</button>
           </div>
-        </button>
+          <div class="symbol-wrap">
+            <button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/78FFD/index.html">꩜</button>
+          </div>
+          <div class="symbol-wrap">
+            <button class="symbol-button" data-id="home" data-url="https://kodux78k.github.io/oiDual-idHome/">◌</button>
+          </div>
+          <div class="symbol-wrap">
+            <button class="symbol-button" data-id="doc" data-url="https://kodux78k.github.io/info-Doc/index.html">◘</button>
+          </div>
 
-        <div class="symbol-wrap">
-          <button class="symbol-button" data-id="phi" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/DBZP/KOB-SS-play-2.html">Φ</button>
+          <div class="hud-info" id="hudStatus">KOBLLUX · ORB NEXUS</div>
         </div>
-        <div class="symbol-wrap">
-          <button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/78FFD/index.html">꩜</button>
-        </div>
-        <div class="symbol-wrap">
-          <button class="symbol-button" data-id="home" data-url="https://kodux78k.github.io/oiDual-idHome/">◌</button>
-        </div>
-        <div class="symbol-wrap">
-          <button class="symbol-button" data-id="doc" data-url="https://kodux78k.github.io/info-Doc/index.html">◘</button>
-        </div>
-
-        <div class="hud-info" id="hudStatus">KOBLLUX · ORB NEXUS</div>
       </div>
-    </div>
-    <div id="arch-overlay"></div>  
-  </div>
 
-  <div id="kblx-back">
-    <div id="kblx-panel">
-      <div class="p-chip">⌘ KOBLLUX HUD · EDITOR DE ROTA</div>
-      <div class="p-title" id="kblx-ttl">Botão</div>
-      <label class="p-lbl" for="kblx-inp">Novo valor para data-url</label>
-      <input id="kblx-inp" type="text" placeholder="arquivo.html  ou  https://..." spellcheck="false" autocomplete="off">
-      <div class="kblx-row">
-        <button class="kblx-btn kblx-save" id="kblx-btn-save">⊙ Salvar no botão</button>
-        <button class="kblx-btn kblx-close" id="kblx-btn-close">✕ Fechar</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="yt-container" class="absolute -left-[9999px]"></div>
-  <div id="sc-container" class="absolute -left-[9999px]"></div>
-  <audio id="local-audio" crossorigin="anonymous"></audio>
-
-  <div id="kodux-widget" class="state-ball" style="right: 20px; bottom: 100px;">
-    <div id="content-ball" class="w-full h-full flex items-center justify-center text-[var(--primary)]">
-      <i class="ph-fill ph-vinyl-record animate-spin" style="animation-duration: 4s; font-size: 28px;"></i>
+      <div id="arch-overlay"></div>
     </div>
 
-    <div id="content-preview" class="hidden-content w-full h-full flex items-center px-3 gap-3">
-      <img id="prev-cover" src="https://picsum.photos/100" class="w-12 h-12 rounded-full object-cover border border-[var(--primary)] shadow-lg preview-clickable cursor-pointer transition-transform hover:scale-105" onclick="openFullFromPreview(event)">
-      <div class="flex-1 overflow-hidden preview-clickable cursor-pointer" onclick="openFullFromPreview(event)">
-        <h4 id="prev-title" class="text-[11px] font-bold text-white truncate glow-text">Kodux System</h4>
-        <p id="prev-artist" class="text-[9px] text-[var(--muted)] truncate">Aguardando...</p>
-      </div>
-      <button onclick="togglePlay(event)" class="text-white hover:text-[var(--primary)] transition z-10">
-        <i id="prev-play-icon" class="ph-fill ph-play-circle text-4xl"></i>
-      </button>
-    </div>
-
-    <div id="content-footer" class="hidden-content w-full h-full flex flex-col relative">
-      <div class="absolute top-0 left-0 w-full h-1 bg-white/5 cursor-pointer" id="footer-progress-click">
-        <div id="footer-progress-bar" class="h-full bg-[var(--primary)] w-0 shadow-[0_0_10px_var(--primary)]"></div>
-      </div>
-      <div class="drag-header flex-1 flex items-center px-6 gap-4">
-        <img id="foot-cover" src="https://picsum.photos/100" class="w-14 h-14 rounded-xl object-cover shadow-xl border border-white/10">
-        <div class="flex-1 overflow-hidden cursor-pointer" onclick="updateWidgetState('full')">
-          <h4 id="foot-title" class="text-sm font-bold text-white truncate">Kodux System</h4>
-          <p id="foot-artist" class="text-xs text-[var(--muted)] truncate">Aguardando...</p>
-        </div>
-        <div class="flex items-center gap-5">
-          <button onclick="playPrev(event)" class="text-[var(--muted)] hover:text-white"><i class="ph-fill ph-skip-back text-2xl"></i></button>
-          <button onclick="togglePlay(event)" class="text-white hover:scale-110 transition"><i id="foot-play-icon" class="ph-fill ph-play-circle text-5xl"></i></button>
-          <button onclick="playNext(event)" class="text-[var(--muted)] hover:text-white"><i class="ph-fill ph-skip-forward text-2xl"></i></button>
-          <button onclick="collapseToBall(event)" class="text-[var(--muted)] ml-2"><i class="ph ph-minus-circle text-2xl"></i></button>
+    <div id="kblx-back">
+      <div id="kblx-panel">
+        <div class="p-chip">⌘ KOBLLUX HUD · EDITOR DE ROTA</div>
+        <div class="p-title" id="kblx-ttl">Botão</div>
+        <label class="p-lbl" for="kblx-inp">Novo valor para data-url</label>
+        <input id="kblx-inp" type="text" placeholder="arquivo.html  ou  https://..." spellcheck="false" autocomplete="off">
+        <div class="kblx-row">
+          <button class="kblx-btn kblx-save" id="kblx-btn-save">⊙ Salvar no botão</button>
+          <button class="kblx-btn kblx-close" id="kblx-btn-close">✕ Fechar</button>
         </div>
       </div>
     </div>
 
-    <div id="content-full" class="hidden-content flex flex-col w-full h-full relative">
-      <div class="drag-header w-full p-5 flex justify-between items-center bg-white/5 border-b border-white/5">
-        <div class="flex items-center gap-3">
-          <i class="ph-fill ph-lightning text-[var(--primary)] text-xl"></i>
-          <span class="text-sm font-black tracking-widest glow-text">ORÁCULO DUAL</span>
+    <div id="yt-container" class="absolute -left-[9999px]"></div>
+    <div id="sc-container" class="absolute -left-[9999px]"></div>
+    <audio id="local-audio" crossorigin="anonymous"></audio>
+
+    <div id="kodux-widget" data-idle-target class="state-ball" style="right: 20px; bottom: 100px;">
+      <div id="content-ball" class="w-full h-full flex items-center justify-center text-[var(--primary)]">
+        <i class="ph-fill ph-vinyl-record animate-spin" style="animation-duration: 4s; font-size: 28px;"></i>
+      </div>
+
+      <div id="content-preview" class="hidden-content w-full h-full flex items-center px-3 gap-3">
+        <img id="prev-cover" src="https://picsum.photos/100" class="w-12 h-12 rounded-full object-cover border border-[var(--primary)] shadow-lg preview-clickable cursor-pointer transition-transform hover:scale-105" onclick="openFullFromPreview(event)">
+        <div class="flex-1 overflow-hidden preview-clickable cursor-pointer" onclick="openFullFromPreview(event)">
+          <h4 id="prev-title" class="text-[11px] font-bold text-white truncate glow-text">Kodux System</h4>
+          <p id="prev-artist" class="text-[9px] text-[var(--muted)] truncate">Aguardando...</p>
         </div>
-        <button onclick="collapseToBall(event)" class="text-[var(--muted)] hover:text-white p-2 bg-white/5 rounded-lg">
-          <i class="ph ph-caret-down-bold"></i>
+        <button onclick="togglePlay(event)" class="text-white hover:text-[var(--primary)] transition z-10">
+          <i id="prev-play-icon" class="ph-fill ph-play-circle text-4xl"></i>
         </button>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-5 pb-36 soft-scroll">
-        <div class="mb-4">
-          <div class="flex items-center gap-2 overflow-x-auto pb-2 soft-scroll" id="playlist-tabs"></div>
+      <div id="content-footer" class="hidden-content w-full h-full flex flex-col relative">
+        <div class="absolute top-0 left-0 w-full h-1 bg-white/5 cursor-pointer" id="footer-progress-click">
+          <div id="footer-progress-bar" class="h-full bg-[var(--primary)] w-0 shadow-[0_0_10px_var(--primary)]"></div>
         </div>
-
-        <div class="flex gap-2 mb-4">
-          <div class="flex-1 relative">
-            <i class="ph ph-link absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"></i>
-            <input type="text" id="link-input" placeholder="YouTube ou SoundCloud link" class="glass-input w-full rounded-xl pl-10 pr-4 py-3 text-xs">
+        <div class="drag-header flex-1 flex items-center px-6 gap-4">
+          <img id="foot-cover" src="https://picsum.photos/100" class="w-14 h-14 rounded-xl object-cover shadow-xl border border-white/10">
+          <div class="flex-1 overflow-hidden cursor-pointer" onclick="updateWidgetState('full')">
+            <h4 id="foot-title" class="text-sm font-bold text-white truncate">Kodux System</h4>
+            <p id="foot-artist" class="text-xs text-[var(--muted)] truncate">Aguardando...</p>
           </div>
-          <select id="destination-select" class="glass-select rounded-xl px-3 text-xs min-w-[135px]">
-            <option value="all">Todas</option>
-          </select>
-          <button onclick="addLink()" class="btn-primary px-4 rounded-xl shadow-lg">
-            <i class="ph ph-plus-bold"></i>
-          </button>
-        </div>
-
-        <div class="flex gap-2 mb-4 items-center">
-          <div class="flex-1 relative">
-            <i class="ph ph-folder-simple absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"></i>
-            <input type="text" id="new-playlist-input" placeholder="Criar nova playlist" class="glass-input w-full rounded-xl pl-10 pr-4 py-3 text-xs">
-          </div>
-          <button onclick="createPlaylist()" class="btn-primary px-4 rounded-xl shadow-lg">
-            <i class="ph ph-folder-plus"></i>
-          </button>
-        </div>
-
-        <div class="flex items-center justify-between mb-3">
-          <div>
-            <h3 class="text-sm font-bold text-white">Playlists carregadas</h3>
-            <p class="text-[10px] text-[var(--muted)]">Toque para trocar de grupo, criar, remover ou organizar.</p>
+          <div class="flex items-center gap-5">
+            <button onclick="playPrev(event)" class="text-[var(--muted)] hover:text-white"><i class="ph-fill ph-skip-back text-2xl"></i></button>
+            <button onclick="togglePlay(event)" class="text-white hover:scale-110 transition"><i id="foot-play-icon" class="ph-fill ph-play-circle text-5xl"></i></button>
+            <button onclick="playNext(event)" class="text-[var(--muted)] hover:text-white"><i class="ph-fill ph-skip-forward text-2xl"></i></button>
+            <button onclick="collapseToBall(event)" class="text-[var(--muted)] ml-2"><i class="ph ph-minus-circle text-2xl"></i></button>
           </div>
         </div>
-
-        <div id="playlist-container" class="flex flex-col gap-3"></div>
       </div>
 
-      <div class="absolute bottom-0 left-0 w-full bg-black/80 backdrop-blur-xl border-t border-[var(--primary)] p-6">
-        <input type="range" id="main-progress" min="0" max="100" value="0" class="w-full mb-4">
-        <div class="flex items-center justify-between gap-4">
-          <div class="flex items-center gap-4 overflow-hidden">
-            <img id="main-cover" src="https://picsum.photos/100" class="w-14 h-14 rounded-xl border border-white/20 object-cover">
-            <div class="overflow-hidden">
-              <h4 id="main-title" class="text-sm font-bold text-white truncate">Oráculo</h4>
-              <p id="main-artist" class="text-[10px] text-[var(--muted)] truncate">Sistema KODUX v2.5</p>
+      <div id="content-full" class="hidden-content flex flex-col w-full h-full relative">
+        <div class="drag-header w-full p-5 flex justify-between items-center bg-white/5 border-b border-white/5">
+          <div class="flex items-center gap-3">
+            <i class="ph-fill ph-lightning text-[var(--primary)] text-xl"></i>
+            <span class="text-sm font-black tracking-widest glow-text">ORÁCULO DUAL</span>
+          </div>
+          <button onclick="collapseToBall(event)" class="text-[var(--muted)] hover:text-white p-2 bg-white/5 rounded-lg">
+            <i class="ph ph-caret-down-bold"></i>
+          </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-5 pb-36 soft-scroll">
+          <div class="mb-4">
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 soft-scroll" id="playlist-tabs"></div>
+          </div>
+
+          <div class="flex gap-2 mb-4">
+            <div class="flex-1 relative">
+              <i class="ph ph-link absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"></i>
+              <input type="text" id="link-input" placeholder="YouTube ou SoundCloud link" class="glass-input w-full rounded-xl pl-10 pr-4 py-3 text-xs">
+            </div>
+            <select id="destination-select" class="glass-select rounded-xl px-3 text-xs min-w-[135px]">
+              <option value="all">Todas</option>
+            </select>
+            <button onclick="addLink()" class="btn-primary px-4 rounded-xl shadow-lg">
+              <i class="ph ph-plus-bold"></i>
+            </button>
+          </div>
+
+          <div class="flex gap-2 mb-4 items-center">
+            <div class="flex-1 relative">
+              <i class="ph ph-folder-simple absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"></i>
+              <input type="text" id="new-playlist-input" placeholder="Criar nova playlist" class="glass-input w-full rounded-xl pl-10 pr-4 py-3 text-xs">
+            </div>
+            <button onclick="createPlaylist()" class="btn-primary px-4 rounded-xl shadow-lg">
+              <i class="ph ph-folder-plus"></i>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h3 class="text-sm font-bold text-white">Playlists carregadas</h3>
+              <p class="text-[10px] text-[var(--muted)]">Toque para trocar de grupo, criar, remover ou organizar.</p>
             </div>
           </div>
-          <div class="flex items-center gap-5 shrink-0">
-            <button onclick="playPrev()" class="text-white text-2xl"><i class="ph-fill ph-skip-back"></i></button>
-            <button onclick="togglePlay()" class="w-14 h-14 rounded-full bg-[var(--primary)] text-black flex items-center justify-center shadow-[0_0_20px_var(--primary)]">
-              <i id="main-play-icon" class="ph-fill ph-play text-3xl ml-1"></i>
-            </button>
-            <button onclick="playNext()" class="text-white text-2xl"><i class="ph-fill ph-skip-forward"></i></button>
+
+          <div id="playlist-container" class="flex flex-col gap-3"></div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 w-full bg-black/80 backdrop-blur-xl border-t border-[var(--primary)] p-6">
+          <input type="range" id="main-progress" min="0" max="100" value="0" class="w-full mb-4">
+          <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4 overflow-hidden">
+              <img id="main-cover" src="https://picsum.photos/100" class="w-14 h-14 rounded-xl border border-white/20 object-cover">
+              <div class="overflow-hidden">
+                <h4 id="main-title" class="text-sm font-bold text-white truncate">Oráculo</h4>
+                <p id="main-artist" class="text-[10px] text-[var(--muted)] truncate">Sistema KODUX v2.5</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-5 shrink-0">
+              <button onclick="playPrev()" class="text-white text-2xl"><i class="ph-fill ph-skip-back"></i></button>
+              <button onclick="togglePlay()" class="w-14 h-14 rounded-full bg-[var(--primary)] text-black flex items-center justify-center shadow-[0_0_20px_var(--primary)]">
+                <i id="main-play-icon" class="ph-fill ph-play text-3xl ml-1"></i>
+              </button>
+              <button onclick="playNext()" class="text-white text-2xl"><i class="ph-fill ph-skip-forward"></i></button>
+            </div>
           </div>
         </div>
       </div>
@@ -263,31 +295,51 @@
   <script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kob-outline-uni.js"></script>
 
   <script>
-    const uiElements = document.querySelectorAll(
-  '.kob-tts-dock, #kodux-widget'
-);
+    (() => {
+      const bodyPlayer = document.getElementById('bodyPlayer');
+      const idleSelector = '.kob-tts-dock, #kodux-widget, [data-idle-target]';
+      const modes = ['player', 'embed', 'fullscreen', 'compact'];
+      let idleTimer = null;
 
-uiElements.forEach(el => el.classList.add('idle'));
+      function getIdleTargets() {
+        return document.querySelectorAll(idleSelector);
+      }
 
-    let idleTimer;
+      function setIdleState(isIdle) {
+        getIdleTargets().forEach(el => el.classList.toggle('idle', isIdle));
+      }
 
-    function resetIdle(){
-      if (!dock) return;
-      dock.classList.remove('idle');
+      function resetIdle() {
+        setIdleState(false);
 
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(()=>{
-        dock.classList.add('idle');
-      }, 1870); // 1870 ms
-    }
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+          setIdleState(true);
+        }, 1870);
+      }
 
-    /* eventos que despertam o dock */
-    ['pointerdown','pointermove','touchstart','mousemove'].forEach(ev => {
-      document.addEventListener(ev, resetIdle, {passive:true});
-    });
+      function setMode(mode = 'player') {
+        if (!bodyPlayer || !modes.includes(mode)) return;
 
-    resetIdle();
+        bodyPlayer.dataset.mode = mode;
+        bodyPlayer.classList.remove(...modes.map(m => `mode-${m}`));
+        bodyPlayer.classList.add(`mode-${mode}`);
+      }
+
+      window.KoduxShell = {
+        setMode,
+        resetIdle
+      };
+
+      ['pointerdown', 'pointermove', 'touchstart', 'mousemove', 'scroll'].forEach(ev => {
+        document.addEventListener(ev, resetIdle, { passive: true });
+      });
+
+      document.addEventListener('keydown', resetIdle);
+
+      setMode(bodyPlayer?.dataset.mode || 'player');
+      resetIdle();
+    })();
   </script>
-
 </body>
 </html>
