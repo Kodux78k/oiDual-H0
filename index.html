@@ -1,28 +1,46 @@
 <html lang="pt-BR"><head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>KOBLLUX TTS Dock - Standalone</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a0c14">
+  <title>KODUX | Super Saiyan Player</title>
 
-  <!-- Fontes e CSS Externos --
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/V-core/css/main.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://w.soundcloud.com/player/api.js"></script>
 
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-DH10r.css">
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/kob-root-aa.css">
-    
-    <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/base1.css">
-<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/kob-hud.css">
+  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/DBZP/css/ss5.css">
+<style>
+        :root {
+          --z-base: 0;
+          --z-content: 100;
+          --z-widget: 500;
+          --z-overlay: 1000;
+          --z-system: 5000;
+        }
+      </style><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-dox-nanai-v4.css"><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-dox-nanai.css"><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/V-core/css/main-root.css"><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-framefix.css"><style> 
 
--->
+/* estado normal */
+.kob-tts-dock{
+  transition: transform .35s ease, opacity .65s ease;
+}
 
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-dox-nanai-v4.css">
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-dox-nanai.css">
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/V-core/css/main-root.css">
-    
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-framefix.css">
+/* quase invisível */
+.kob-tts-dock.idle{
+  opacity: .18;
+  transform: scale(.92);
+}
+
+/* quando passa o dedo ou mouse */
+.kob-tts-dock:hover{
+  opacity: 1;
+  transform: scale(1);
+}
+
+.kob-tts-dock{
+
  
-</head>
-<body>
+  box-shadow:none !important;
+}</style><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/0x01_pulsar_V_D5-2.css">
 
 <div id="root">
 
@@ -30,7 +48,7 @@
 
 <div class="wrap">
   <div class="content">
-    <iframe id="frame" src="https://kodux78k.github.io/oiDual-HuD/"></iframe>
+    <iframe id="frame" src="oiDual--Y-/M0D/DBZP/"></iframe>
     <div id="kob-tts-outline"></div>
   </div>
 
@@ -69,10 +87,10 @@
 
     <!-- Outros atalhos -->
     <div class="symbol-wrap">
-      <button class="symbol-button" data-id="phi" data-url="https://kodux78k.github.io/oiDual-HuD/">Φ</button>
+      <button class="symbol-button" data-id="phi" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/DBZP/KOB-SS-play-2.html">Φ</button>
     </div>
     <div class="symbol-wrap">
-      <button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/78FFD/">꩜</button>
+      <button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/78FFD/index.html">꩜</button>
     </div>
     <div class="symbol-wrap">
       <button class="symbol-button" data-id="home" data-url="https://kodux78k.github.io/oiDual-idHome/">◌</button>
@@ -171,7 +189,173 @@ resetIdle();
 
 <script src="https://kodux78k.github.io/oiDual--Y-/js/kob-mestre-2.js"></script>
 
+<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kob-outline-uni.js"></script>
 
-<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kob-outline.js"></script>
 
-</body></html>
+
+</head>
+
+<body class="flex items-center justify-center">
+  <div class="absolute inset-0 z-0 opacity-10 pointer-events-none flex items-center justify-center select-none">
+<h1 id="appTitle" class="text-6xl font-black tracking-[0.5em] text-white">KODUX</h1>
+
+<script>
+  const el = document.getElementById('appTitle');
+
+  function getUserName() {
+    return (
+      localStorage.getItem('di_userName') ||
+      localStorage.getItem('userName') ||
+      localStorage.getItem('infodose:username') ||
+      'KODUX'
+    );
+  }
+
+  function updateName() {
+    el.textContent = getUserName().toUpperCase();
+  }
+
+  // inicial
+  updateName();
+
+  // escuta mudanças no localStorage (entre abas)
+  window.addEventListener('storage', updateName);
+</script>
+  </div>
+
+  <div id="yt-container" class="absolute -left-[9999px]"></div>
+  <div id="sc-container" class="absolute -left-[9999px]"></div>
+  <audio id="local-audio" crossorigin="anonymous"></audio>
+
+  <div id="kodux-widget" class="state-ball" style="right: 20px; bottom: 100px;">
+    <div id="content-ball" class="w-full h-full flex items-center justify-center text-[var(--primary)]">
+      <i class="ph-fill ph-vinyl-record animate-spin" style="animation-duration: 4s; font-size: 28px;"></i>
+    </div>
+
+    <div id="content-preview" class="hidden-content w-full h-full flex items-center px-3 gap-3">
+      <img id="prev-cover" src="https://picsum.photos/100" class="w-12 h-12 rounded-full object-cover border border-[var(--primary)] shadow-lg preview-clickable cursor-pointer transition-transform hover:scale-105" onclick="openFullFromPreview(event)">
+      <div class="flex-1 overflow-hidden preview-clickable cursor-pointer" onclick="openFullFromPreview(event)">
+        <h4 id="prev-title" class="text-[11px] font-bold text-white truncate glow-text">Kodux System</h4>
+        <p id="prev-artist" class="text-[9px] text-[var(--muted)] truncate">Aguardando...</p>
+      </div>
+      <button onclick="togglePlay(event)" class="text-white hover:text-[var(--primary)] transition z-10">
+        <i id="prev-play-icon" class="ph-fill ph-play-circle text-4xl"></i>
+      </button>
+    </div>
+
+    <div id="content-footer" class="hidden-content w-full h-full flex flex-col relative">
+      <div class="absolute top-0 left-0 w-full h-1 bg-white/5 cursor-pointer" id="footer-progress-click">
+        <div id="footer-progress-bar" class="h-full bg-[var(--primary)] w-0 shadow-[0_0_10px_var(--primary)]"></div>
+      </div>
+      <div class="drag-header flex-1 flex items-center px-6 gap-4">
+        <img id="foot-cover" src="https://picsum.photos/100" class="w-14 h-14 rounded-xl object-cover shadow-xl border border-white/10">
+        <div class="flex-1 overflow-hidden cursor-pointer" onclick="updateWidgetState('full')">
+          <h4 id="foot-title" class="text-sm font-bold text-white truncate">Kodux System</h4>
+          <p id="foot-artist" class="text-xs text-[var(--muted)] truncate">Aguardando...</p>
+        </div>
+        <div class="flex items-center gap-5">
+          <button onclick="playPrev(event)" class="text-[var(--muted)] hover:text-white"><i class="ph-fill ph-skip-back text-2xl"></i></button>
+          <button onclick="togglePlay(event)" class="text-white hover:scale-110 transition"><i id="foot-play-icon" class="ph-fill ph-play-circle text-5xl"></i></button>
+          <button onclick="playNext(event)" class="text-[var(--muted)] hover:text-white"><i class="ph-fill ph-skip-forward text-2xl"></i></button>
+          <button onclick="collapseToBall(event)" class="text-[var(--muted)] ml-2"><i class="ph ph-minus-circle text-2xl"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-full" class="hidden-content flex flex-col w-full h-full relative">
+      <div class="drag-header w-full p-5 flex justify-between items-center bg-white/5 border-b border-white/5">
+        <div class="flex items-center gap-3">
+          <i class="ph-fill ph-lightning text-[var(--primary)] text-xl"></i>
+          <span class="text-sm font-black tracking-widest glow-text">ORÁCULO DUAL</span>
+        </div>
+        <button onclick="collapseToBall(event)" class="text-[var(--muted)] hover:text-white p-2 bg-white/5 rounded-lg">
+          <i class="ph ph-caret-down-bold"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-5 pb-36 soft-scroll">
+        <div class="mb-4">
+          <div class="flex items-center gap-2 overflow-x-auto pb-2 soft-scroll" id="playlist-tabs"></div>
+        </div>
+
+        <div class="flex gap-2 mb-4">
+          <div class="flex-1 relative">
+            <i class="ph ph-link absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"></i>
+            <input type="text" id="link-input" placeholder="YouTube ou SoundCloud link" class="glass-input w-full rounded-xl pl-10 pr-4 py-3 text-xs">
+          </div>
+          <select id="destination-select" class="glass-select rounded-xl px-3 text-xs min-w-[135px]">
+            <option value="all">Todas</option>
+          </select>
+          <button onclick="addLink()" class="btn-primary px-4 rounded-xl shadow-lg">
+            <i class="ph ph-plus-bold"></i>
+          </button>
+        </div>
+
+        <div class="flex gap-2 mb-4 items-center">
+          <div class="flex-1 relative">
+            <i class="ph ph-folder-simple absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"></i>
+            <input type="text" id="new-playlist-input" placeholder="Criar nova playlist" class="glass-input w-full rounded-xl pl-10 pr-4 py-3 text-xs">
+          </div>
+          <button onclick="createPlaylist()" class="btn-primary px-4 rounded-xl shadow-lg">
+            <i class="ph ph-folder-plus"></i>
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="text-sm font-bold text-white">Playlists carregadas</h3>
+            <p class="text-[10px] text-[var(--muted)]">Toque para trocar de grupo, criar, remover ou organizar.</p>
+          </div>
+        </div>
+
+        <div id="playlist-container" class="flex flex-col gap-3"></div>
+      </div>
+
+      <div class="absolute bottom-0 left-0 w-full bg-black/80 backdrop-blur-xl border-t border-[var(--primary)] p-6">
+        <input type="range" id="main-progress" min="0" max="100" value="0" class="w-full mb-4">
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-4 overflow-hidden">
+            <img id="main-cover" src="https://picsum.photos/100" class="w-14 h-14 rounded-xl border border-white/20 object-cover">
+            <div class="overflow-hidden">
+              <h4 id="main-title" class="text-sm font-bold text-white truncate">Oráculo</h4>
+              <p id="main-artist" class="text-[10px] text-[var(--muted)] truncate">Sistema KODUX v2.5</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-5 shrink-0">
+            <button onclick="playPrev()" class="text-white text-2xl"><i class="ph-fill ph-skip-back"></i></button>
+            <button onclick="togglePlay()" class="w-14 h-14 rounded-full bg-[var(--primary)] text-black flex items-center justify-center shadow-[0_0_20px_var(--primary)]">
+              <i id="main-play-icon" class="ph-fill ph-play text-3xl ml-1"></i>
+            </button>
+            <button onclick="playNext()" class="text-white text-2xl"><i class="ph-fill ph-skip-forward"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <script src="https://kodux78k.github.io/oiDual--Y-/M0D/DBZP/js/ss5.js"></script>
+  
+
+<script src="https://kodux78k.github.io/oiDual--Y-/js/kob-LVb.js"></script><script type="module" src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kobdh0-main.js"></script><script>
+
+const dock = document.querySelector('.kob-tts-dock');
+
+let idleTimer;
+
+function resetIdle(){
+  dock.classList.remove('idle');
+
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(()=>{
+    dock.classList.add('idle');
+  }, 1870); // 1870  mili segundos parado
+}
+
+/* eventos que despertam o dock */
+['pointerdown','pointermove','touchstart','mousemove']
+.forEach(ev=>{
+  document.addEventListener(ev, resetIdle, {passive:true});
+});
+
+resetIdle();
+</script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/0x03_expandir_V_D7.js"></script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/0x07_selar_B_D3.js"></script><script src="https://kodux78k.github.io/oiDual--Y-/js/kob-mestre-2.js"></script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kob-outline-uni.js"></script></body></html>
