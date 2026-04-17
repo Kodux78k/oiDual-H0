@@ -341,5 +341,271 @@
       resetIdle();
     })();
   </script>
+  
+  <script>
+
+// 🔥 ===============================
+// 🔥 ORB SYSTEM · CORE UNIFICADO
+// 🔥 ===============================
+
+// 🔹 GERADOR UNIVERSAL
+function makeOrbAvatar(name, size = 36) {
+  const safe = name || 'DUAL';
+
+  // seed determinística baseada no nome
+  const seed = safe.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+
+  const h1 = seed % 360;
+  const h2 = (seed * 37) % 360;
+
+  // 🔒 evita colisão de gradient no DOM
+  const uid = Math.random().toString(36).slice(2, 6);
+  const id = 'g' + seed.toString(36) + uid;
+
+  return `
+    <svg width="${size}" height="${size}" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="${id}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="hsl(${h1},100%,55%)"/>
+          <stop offset="100%" stop-color="hsl(${h2},90%,45%)"/>
+        </linearGradient>
+      </defs>
+
+      <!-- base -->
+      <rect width="32" height="32" rx="7" fill="#071018"/>
+
+      <!-- glow -->
+      <circle cx="16" cy="16" r="9" fill="url(#${id})" opacity="0.25"/>
+
+      <!-- core -->
+      <circle cx="16" cy="16" r="7" fill="url(#${id})"/>
+
+      <!-- ring -->
+      <circle cx="16" cy="16" r="13" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+    </svg>
+  `;
+}
+
+
+// 🔓 GLOBAL HOOK
+window.makeOrbAvatar = makeOrbAvatar;
+
+// 🔹 ALIAS OPCIONAL (mini semântico)
+window.makeMiniAvatar = (name) => makeOrbAvatar(name, 24);
+
+
+// 🔁 ===============================
+// 🔁 UPDATE INTERFACE
+// 🔁 ===============================
+function updateInterface(name){
+  const safe = name || '';
+
+  // 🔹 texto
+  els.lblName.innerText = safe;
+  els.input.value = safe;
+
+  // 🔹 estado ativo
+  const activeKey = STATE.keys.find(k => k.active);
+
+  els.smallIdent.innerText = activeKey ? activeKey.name : '--';
+  els.actBadge.innerText = activeKey ? `key:${activeKey.name}` : 'v:--';
+
+  // 🔥 ORBS SINCRONIZADOS
+  const orbBig  = makeOrbAvatar(safe, 64);
+  const orbMid  = makeOrbAvatar(safe, 36);
+  const orbMini = makeOrbAvatar(safe, 24);
+
+  els.avatarTgt.innerHTML = orbBig;
+  els.smallMiniAvatar.innerHTML = orbMini;
+  els.actMiniAvatar.innerHTML = orbMid;
+
+  // 🔹 nome ativo
+  els.actName.innerText = safe;
+}
+
+</script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/o0.js"></script><script>
+(function () {
+  function di_getSafeName() {
+    return (
+      (document.querySelector('#inputUser')?.value ||
+       document.querySelector('#infodoseNameInput')?.value ||
+       localStorage.getItem('di_userName') ||
+       localStorage.getItem('userName') ||
+       'DUAL')
+      .trim() || ''
+    );
+  }
+
+  function di_setText(sel, value) {
+    const el = document.querySelector(sel);
+    if (el) el.textContent = value;
+  }
+
+  function di_setHtml(sel, html) {
+    const el = document.querySelector(sel);
+    if (el) el.innerHTML = html;
+  }
+
+  function di_syncNameUI(name) {
+    const safe = (name || '').trim() || 'Convidado';
+
+    localStorage.setItem('di_userName', safe);
+    localStorage.setItem('userName', safe);
+
+    di_setText('#lblName', safe);
+    di_setText('#actName', safe);
+    di_setText('#smallText', safe);
+    di_setText('#hudStatus', safe);
+
+    const activeKey = window.STATE?.keys?.find?.(k => k.active);
+    di_setText('#smallIdent', activeKey ? activeKey.name : '--');
+    di_setText('#actBadge', activeKey ? `key:${activeKey.name}` : 'v:--');
+
+    const mainOrb = document.querySelector('#main-orb');
+    if (mainOrb && typeof window.makeOrbAvatar === 'function') {
+      mainOrb.innerHTML = window.makeOrbAvatar(safe, 48);
+    }
+
+    const avatarTarget = document.querySelector('#avatarTarget');
+    if (avatarTarget && typeof window.makeOrbAvatar === 'function') {
+      avatarTarget.innerHTML = window.makeOrbAvatar(safe, 64);
+    }
+
+    const smallMiniAvatar = document.querySelector('#smallMiniAvatar');
+    if (smallMiniAvatar && typeof window.makeOrbAvatar === 'function') {
+      smallMiniAvatar.innerHTML = window.makeOrbAvatar(safe, 24);
+    }
+
+    const actMiniAvatar = document.querySelector('#actMiniAvatar');
+    if (actMiniAvatar && typeof window.makeOrbAvatar === 'function') {
+      actMiniAvatar.innerHTML = window.makeOrbAvatar(safe, 24);
+    }
+  }
+
+  function di_bindLiveName() {
+    const inputs = [
+      document.querySelector('#inputUser'),
+      document.querySelector('#infodoseNameInput')
+    ].filter(Boolean);
+
+    const initial = di_getSafeName();
+
+    inputs.forEach(inp => {
+      if (!inp) return;
+      if (!inp.value) inp.value = initial;
+
+      const onChange = () => di_syncNameUI(inp.value);
+      inp.addEventListener('input', onChange);
+      inp.addEventListener('change', onChange);
+    });
+
+    di_syncNameUI(initial);
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'di_userName' || e.key === 'userName') {
+        di_syncNameUI(e.newValue);
+      }
+    });
+
+    document.addEventListener('di:name:update', (e) => {
+      di_syncNameUI(e.detail?.name);
+    });
+  }
+
+  window.di_syncNameUI = di_syncNameUI;
+  window.di_bindLiveName = di_bindLiveName;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', di_bindLiveName);
+  } else {
+    di_bindLiveName();
+  }
+})();
+</script>
+<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/inline-000.js"></script>
+<script>
+
+// 🔥 ===============================
+// 🔥 ORB SYSTEM · CORE UNIFICADO
+// 🔥 ===============================
+
+// 🔹 GERADOR UNIVERSAL
+function makeOrbAvatar(name, size = 24) {
+  const safe = name || '';
+
+  // seed determinística baseada no nome
+  const seed = safe.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+
+  const h1 = seed % 360;
+  const h2 = (seed * 37) % 360;
+
+  // 🔒 evita colisão de gradient no DOM
+  const uid = Math.random().toString(36).slice(2, 6);
+  const id = 'g' + seed.toString(36) + uid;
+
+  return `
+    <svg width="${size}" height="${size}" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="${id}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="hsl(${h1},100%,55%)"/>
+          <stop offset="100%" stop-color="hsl(${h2},90%,45%)"/>
+        </linearGradient>
+      </defs>
+
+      <!-- base -->
+      <rect width="32" height="32" rx="7" fill="#071018"/>
+
+      <!-- glow -->
+      <circle cx="16" cy="16" r="9" fill="url(#${id})" opacity="0.25"/>
+
+      <!-- core -->
+      <circle cx="16" cy="16" r="7" fill="url(#${id})"/>
+
+      <!-- ring -->
+      <circle cx="16" cy="16" r="13" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+    </svg>
+  `;
+}
+
+
+// 🔓 GLOBAL HOOK
+window.makeOrbAvatar = makeOrbAvatar;
+
+// 🔹 ALIAS OPCIONAL (mini semântico)
+window.makeMiniAvatar = (name) => makeOrbAvatar(name, 24);
+
+
+// 🔁 ===============================
+// 🔁 UPDATE INTERFACE
+// 🔁 ===============================
+function updateInterface(name){
+  const safe = name || '';
+
+  // 🔹 texto
+  els.lblName.innerText = safe;
+  els.input.value = safe;
+
+  // 🔹 estado ativo
+  const activeKey = STATE.keys.find(k => k.active);
+
+  els.smallIdent.innerText = activeKey ? activeKey.name : '--';
+  els.actBadge.innerText = activeKey ? `key:${activeKey.name}` : 'v:--';
+
+  // 🔥 ORBS SINCRONIZADOS
+  const orbBig  = makeOrbAvatar(safe, 64);
+  const orbMid  = makeOrbAvatar(safe, 36);
+  const orbMini = makeOrbAvatar(safe, 24);
+
+  els.avatarTgt.innerHTML = orbBig;
+  els.smallMiniAvatar.innerHTML = orbMini;
+  els.actMiniAvatar.innerHTML = orbMid;
+
+  // 🔹 nome ativo
+  els.actName.innerText = safe;
+}
+
+</script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/o0.js"></script>
+  
+  
 </body>
 </html>
