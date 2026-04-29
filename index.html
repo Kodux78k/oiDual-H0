@@ -1,179 +1,322 @@
 <html lang="pt-BR"><head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>KOBLLUX TTS Dock - Standalone</title>
+  <title>Fusion Card // Core Controller</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="manifest" href="manifest.json"> <meta name="theme-color" content="#05070a"> <link rel="apple-touch-icon" href="icon-192.png">
 
-  <!-- Fontes e CSS Externos --
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/V-core/css/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;900&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;900&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-DH10r.css">
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/kob-root-aa.css">
-    
-    <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/base1.css">
-<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/kob-hud.css">
 
--->
+<link rel="stylesheet" href="https://kodux78k.github.io/oi-Dual/css/main.css">
 
-<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kxt-solar.css">
 
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-dox-nanai-v4.css">
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-dox-nanai.css">
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/V-core/css/main-root.css">
-    
-  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-framefix.css">
- 
-</head>
+
+<style>
+        :root {
+          --z-base: 0;
+          --z-content: 100;
+          --z-widget: 500;
+          --z-overlay: 1000;
+          --z-system: 5000;
+        }
+      </style><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;900&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"><link rel="stylesheet" href="https://kodux78k.github.io/oi-Dual/css/main.css"><style>
+        :root {
+          --z-base: 0;
+          --z-content: 100;
+          --z-widget: 500;
+          --z-overlay: 1000;
+          --z-system: 5000;
+        }
+      </style><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-dox-nanai-v4.css"><link rel="stylesheet" href="https://kodux78k.github.io/oi-Dual/css/main.css"><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-dox-nanai.css"><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/V-core/css/main-root.css"><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/kob-aura.css"><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-framefix.css"><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/0x01_pulsar_V_D5-2.css"><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/78F/css/main.css"><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/78F/css/main-ovr.css"><style>
+
+ .bg-gradient-base {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(255,255,255,.55), transparent 45%);
+      pointer-events: none;
+      z-index: var(--z-base);
+    }
+
+  .wrap {
+      position: relative;
+padding:0 0 0px;
+      z-index: var(--z-base);
+    }
+
+  #bg-layer-fixed {
+      position: fixed;
+      inset: 0;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      opacity: .15;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      z-index: var(--z-base);
+    }
+
+ /* orb */
+.orb {
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+  display: flex;
+  place-items: center;
+}
+
+/* núcleo animado */
+.orb-core {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+
+  background:
+    radial-gradient(circle at 30% 30%, var(--orb-accent), transparent 60%),
+    radial-gradient(circle at 70% 70%, var(--orb-primary), var(--orb-secondary));
+
+  box-shadow:
+    0 0 18px var(--orb-primary),
+    0 0 36px rgba(120,227,255,0.4);
+
+  animation: orbSpin var(--orb-speed) linear infinite;
+}
+
+/* animações */
+@keyframes orbSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbPulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+/* estado speaking */
+#orb-root.speaking .orb-core {
+  animation:
+    orbSpin 2s linear infinite,
+    orbPulse 0.5s ease-in-out infinite alternate;
+}
+
+/* animações */
+@keyframes orbSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbPulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+/* estado speaking */
+#orb-root.speaking .orb-core {
+  animation:
+    orbSpin 2s linear infinite,
+    orbPulse 0.5s ease-in-out infinite alternate;
+}
+
+</style><style>
+
+.symbol-wrap, .symbol-bar{  background-color: rgba(0,0,0,0.0.1);}
+#toggleBtn,{
+width: 18px;
+  height: 18px;
+  background-color: rgba(0,0,0,0.0.3);
+}
+
+
+
+
+  .symbol-button.di-icon-ready{
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .symbol-button.di-icon-ready .di-btn-icon-img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  .symbol-button.di-icon-ready .di-btn-icon-fallback{
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .symbol-button.di-icon-ready .di-btn-icon-label{
+    display: none;
+  }
+</style><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-glass.css"><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/nxs.css"><link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/nxs.css"></head>
 <body>
 
-<div id="root">
-<div id="bg-fake-custom"></div>
-<script src="https://kodux78k.github.io/oiDual--Y-/js/kob-LVb.js"></script>
+  <!-- Ambient Blobs -->
+  <div class="ambient-light"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+  <div id="snap-zone"></div>
+  <div class="toaster-wrap" id="toasterWrap"></div>
 
-<div class="wrap">
-  <div class="content">
-    <iframe id="frame" src="https://kodux78k.github.io/oiDual--Y-/M0D/78F/index.html"></iframe>
-    <div id="kob-tts-outline"></div>
-  </div>
+  <!-- CONTAINER PARA CENTRALIZAR INICIALMENTE -->
+  <div class="container">
+    <div class="fusion-card closed" id="mainCard">
 
-  <!-- HUD Inteligente -->
-  <div class="symbol-bar floating" id="symbolBar">
-    
-    <!-- Botão Menu -->
-    <div class="toggle-wrap">
-      <button class="symbol-button main-toggle" id="toggleBtn" title="Menu / Iniciar">≡</button>
-    </div>
+      <div class="card-header" id="cardHeader">
+        <div class="avatar-slot" id="avatarTarget" title="Gerenciar Chaves (Cofre)"></div>
+        <div class="text-block">
+          <div class="greeting-row">
+            <span class="txt-thin" id="lblHello">Oi,</span>
+            <span class="txt-heavy" id="lblName">Convidado</span>
+          </div>
+          <div class="brand-dual">DUAL</div>
+        </div>
+        <div class="clock-widget">
+          <div class="time-display" id="clockTime">00:00</div>
+          <span class="status-led">ONLINE</span>
+        </div>
+        <button class="hud-menu-btn" id="hudMenuBtn" title="Menu Rápido"><i data-lucide="menu"></i></button>
+      </div>
+      
+      <div class="orb-menu-trigger" id="orbMenuTrigger" title="Menu Rápido">●●●</div>
+      <div class="drag-handle"></div>
 
-    <!-- Controles de Navegação de Leitura -->
-    <div class="symbol-wrap">
-      <button class="symbol-button" id="btn-prev" title="Voltar Bloco">◀</button>
-    </div>
-    <div class="symbol-wrap">
-      <button class="symbol-button" id="btn-play" title="Play/Pause">▶</button>
-    </div>
-    <div class="symbol-wrap">
-      <button class="symbol-button" id="btn-next" title="Próximo Bloco">▶▶</button>
-    </div>
+      <div class="small-preview" id="smallPreview" title="Gerenciar Chaves">
+        <div class="mini-avatar" id="smallMiniAvatar"></div>
+        <div class="small-text" id="smallText">Aguardando ativação...</div>
+        <div class="ident-badge" id="smallIdent">--</div>
+      </div>
 
-    <!-- Troca de Arquétipo com ORB integrado (Sempre visível) -->
-    <button class="symbol-button" id="btn-arch" title="Trocar Arquétipo de Voz">
-      <div class="orb-microphone-container">
-        <div class="tts-orb-mini">
-          <div class="orb" id="main-orb">
-            <div class="orb-core"></div>
+      <div class="card-body" id="cardBody">
+        <!-- Main Input User -->
+        <div class="input-wrapper stagger-item">
+          <input type="text" class="cyber-input" id="inputUser" placeholder="Identifique-se..." autocomplete="off">
+        </div>
+
+        <!-- Section 1: ASCII Activation -->
+        <div class="activation-wrap stagger-item">
+          <div class="activation-toggle" onclick="toggleSection('activationCard')">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:10px;height:10px;border-radius:99px;background:var(--neon-cyan)"></div>
+              <strong style="letter-spacing:1px;font-size:0.9rem">Ativação ASCII</strong>
+            </div>
+            <div style="margin-left:auto;font-size:0.82rem;color:rgba(255,255,255,0.6)">BASE v1</div>
+          </div>
+          <div id="activationCard" class="activation-card activation-hidden">
+            <div style="display:flex;align-items:flex-start;gap:10px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="mini-avatar" id="actMiniAvatar"></div>
+                <div><div style="font-weight:700">CÉREBRO</div><div style="font-size:0.78rem;opacity:0.6"><span id="actName">User</span></div></div>
+              </div>
+              <div class="activation-badge" id="actBadge" style="margin-left:auto; color:var(--neon-cyan); font-size:0.8em">v:--</div>
+            </div>
+            <pre id="actPre" class="activation-pre">Carregando...</pre>
+            <div class="activation-controls" style="display:flex;gap:8px;margin-top:8px">
+              <button class="trigger-btn" id="copyActBtn">COPIAR</button>
+            </div>
           </div>
         </div>
-<!--
-        <div class="voice-indicator" id="voiceIndicator"></div> -->
+
+        <!-- Section 2: System & Neural (Config) -->
+        <div class="activation-wrap stagger-item">
+            <div class="activation-toggle" onclick="toggleSection('systemCard')">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:10px;height:10px;border-radius:99px;background:var(--neon-purple)"></div>
+                  <strong style="letter-spacing:1px;font-size:0.9rem">SYSTEM &amp; NEURAL</strong>
+                </div>
+                <div style="margin-left:auto;font-size:0.82rem;color:rgba(255,255,255,0.6)">CONFIG</div>
+            </div>
+            <div id="systemCard" class="activation-card activation-hidden">
+                <div class="col">
+                   <div class="section-title">IDENTIDADE DA INFODOSE</div>
+                   <input type="text" id="infodoseNameInput" placeholder="Nome: World System..." style="width:100%;margin-bottom:8px;padding:8px;border-radius:6px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff">
+                   
+                   <div class="section-title" style="margin-top:8px">CONEXÃO NEURAL (SK)</div>
+                   <input type="password" id="apiKeyInput" placeholder="sk-or-..." autocomplete="off" style="width:100%;margin-bottom:6px;padding:8px;border-radius:6px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff">
+                   
+                   <div class="model-toggle">
+                      <select id="modelSelect" class="btn">
+                        <option value="" disabled="">Selecione Modelo</option>
+                        <option value="nvidia/nemotron-3-nano-30b-a3b:free">NemoTron (Free)</option>
+                        <option value="allenai/molmo-2-8b:free">MolMo (Free)</option>
+                        <option value="mistralai/devstral-2512:free">DevStral</option>
+                        <option value="openai/gpt-oss-120b:free">OSS120b</option>
+                      </select>
+                   </div>
+                   
+                   <div class="panel-divider" style="margin:10px 0; border-top:1px solid rgba(255,255,255,0.05)"></div>
+                   <button id="saveSystemBtn" class="trigger-btn" style="margin-top:12px;background:var(--neon-cyan);color:#000;border:none;font-weight:700">SALVAR CONFIGURAÇÃO</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="stagger-item" style="margin-top:4px">
+            <div class="stat-lbl" style="margin-bottom:6px; font-size:0.6rem; color:rgba(255,255,255,0.4)">INTERFACE MODE</div>
+            <div style="display:flex; gap:8px;">
+                <button class="trigger-btn mode-btn active-mode" id="btnModeCard" onclick="setMode('card')" style="flex:1" title="Modo Padrão">CARD</button>
+                <button class="trigger-btn mode-btn" id="btnModeOrb" onclick="setMode('orb')" style="flex:1" title="Flutuante">ORB</button>
+                <button class="trigger-btn mode-btn" id="btnModeHud" onclick="setMode('hud')" style="flex:1" title="Barra de Topo">HUD</button>
+            </div>
+        </div>
 
       </div>
-    </button>
-
-    <!-- Outros atalhos -->
-    <div class="symbol-wrap">
-      <button class="symbol-button" data-id="phi" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/78F/">Φ</button>
-    </div>
-    <div class="symbol-wrap">
-      <button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/editor-mix/">꩜</button>
-    </div>
-    <div class="symbol-wrap">
-      <button class="symbol-button" data-id="home" data-url="https://kodux78k.github.io/oiDual-idHome/">◌</button>
-    </div>
-    <div class="symbol-wrap">
-      <button class="symbol-button" data-id="doc" data-url="https://kodux78k.github.io/info-Doc/index.html">◘</button>
-    </div>
-
-    <div class="hud-info" id="hudStatus">KOBLLUX · ORB NEXUS</div>
-  </div>
-</div>
-       <div id="arch-overlay"></div>  
-<!-- Scripts -->
-<script type="module" src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kobdh0-main.js"></script>
-
-</div>
-
-<style> 
-
-/* estado normal */
-.kob-tts-dock{
-  transition: transform .35s ease, opacity .65s ease;
-}
-
-/* quase invisível */
-.kob-tts-dock.idle{
-  opacity: .18;
-  transform: scale(.92);
-}
-
-/* quando passa o dedo ou mouse */
-.kob-tts-dock:hover{
-  opacity: 1;
-  transform: scale(1);
-}
-
-.kob-tts-dock{
-
- 
-  box-shadow:none !important;
-}</style>
-
-
-
-<script>
-
-const dock = document.querySelector('.kob-tts-dock');
-
-let idleTimer;
-
-function resetIdle(){
-  dock.classList.remove('idle');
-
-  clearTimeout(idleTimer);
-  idleTimer = setTimeout(()=>{
-    dock.classList.add('idle');
-  }, 1870); // 1870  mili segundos parado
-}
-
-/* eventos que despertam o dock */
-['pointerdown','pointermove','touchstart','mousemove']
-.forEach(ev=>{
-  document.addEventListener(ev, resetIdle, {passive:true});
-});
-
-resetIdle();
-</script>
-
-
-<!-- ╔══════════════════════════════════════════╗
-     ║  KOBLLUX · LONG-PRESS URL EDITOR        ║
-     ║  Segurar 3s → edita data-url do botão   ║
-     ║  Clique curto → sistema externo cuida   ║
-     ╚══════════════════════════════════════════╝ -->
-<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/0x01_pulsar_V_D5-2.css">
-
-<div id="kblx-back">
-  <div id="kblx-panel">
-    <div class="p-chip">⌘ KOBLLUX HUD · EDITOR DE ROTA</div>
-    <div class="p-title" id="kblx-ttl">Botão</div>
-    <label class="p-lbl" for="kblx-inp">Novo valor para data-url</label>
-    <input id="kblx-inp" type="text" placeholder="arquivo.html  ou  https://..." spellcheck="false" autocomplete="off">
-    <div class="kblx-row">
-      <button class="kblx-btn kblx-save" id="kblx-btn-save">⊙ Salvar no botão</button>
-      <button class="kblx-btn kblx-close" id="kblx-btn-close">✕ Fechar</button>
     </div>
   </div>
-</div>
+
+  <!-- KEYS MANAGER MODAL -->
+  <div id="keysModal" class="modal-overlay" aria-hidden="true">
+    <div class="keys-card" role="dialog">
+      <div class="keys-header">
+        <div>
+          <div id="keysTitle" style="font-weight:800;font-size:1.1rem;color:var(--neon-cyan)">USER KEYS MANAGER</div>
+          <div style="color:rgba(255,255,255,0.6);font-size:0.85rem">Gerencie suas chaves API com segurança local (Cofre).</div>
+        </div>
+        <button id="closeKeysBtn" class="small-btn">X</button>
+      </div>
+      <div class="key-list" id="keyList"></div>
+      <div class="form-section" style="margin-top:15px;padding-top:15px;border-top:1px solid rgba(255,255,255,0.05)">
+        <div class="form-grid">
+          <input id="keyNameInput" placeholder="Nome da chave (ex: Principal)">
+          <input id="keyTokenInput" type="password" placeholder="Token / ESK (Opcional)">
+        </div>
+        <button id="addKeyBtn" class="small-btn" style="width:100%;margin-top:8px;background:rgba(255,255,255,0.1)">ADICIONAR CHAVE</button>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:space-between;margin-top:15px;border-top:1px solid rgba(255,255,255,0.05);padding-top:12px">
+        <div style="font-size:0.7rem;color:rgba(255,255,255,0.4);display:flex;align-items:center;gap:5px">
+          <i data-lucide="shield-check" style="width:14px"></i> <span id="vaultStatusText">Cofre Aberto</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button id="lockVaultBtn" class="small-btn danger">BLOQUEAR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VAULT UNLOCK MODAL -->
+  <div id="vaultModal" class="modal-overlay" aria-hidden="true">
+    <div class="keys-card">
+      <div class="vault-icon"><i data-lucide="lock" style="width:24px;height:24px"></i></div>
+      <h3 style="margin:0 0 10px 0;font-weight:800">ACESSO AO COFRE</h3>
+      <p style="margin:0 0 15px 0;font-size:0.9rem;color:rgba(255,255,255,0.6)">Seus dados estão criptografados. Digite a senha para desbloquear.</p>
+      <input type="password" id="vaultPassInput" class="cyber-input" style="text-align:center;margin-bottom:12px" placeholder="Senha...">
+      <div style="display:flex;gap:8px;justify-content:center">
+         <button id="vaultCancelBtn" class="small-btn">Cancelar</button>
+         <button id="vaultUnlockBtn" class="small-btn active-btn">DESBLOQUEAR</button>
+      </div>
+    </div>
+  </div>
 
 
-<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/0x03_expandir_V_D7.js"></script>
 
-
-<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/0x07_selar_B_D3.js"></script>
-
-
-<script src="https://kodux78k.github.io/oiDual--Y-/js/kob-mestre-2.js"></script>
-
-<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kob-outline-uni.js"></script>
+<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/inline-000.js"></script>
 
 <script>
 
@@ -231,7 +374,7 @@ window.makeMiniAvatar = (name) => makeOrbAvatar(name, 24);
 // 🔁 UPDATE INTERFACE
 // 🔁 ===============================
 function updateInterface(name){
-  const safe = name || '';
+  const safe = name || 'Convidado';
 
   // 🔹 texto
   els.lblName.innerText = safe;
@@ -256,97 +399,203 @@ function updateInterface(name){
   els.actName.innerText = safe;
 }
 
-</script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/o0.js"></script><script>
-(function () {
-  function di_getSafeName() {
-    return (
-      (document.querySelector('#inputUser')?.value ||
-       document.querySelector('#infodoseNameInput')?.value ||
-       localStorage.getItem('di_userName') ||
-       localStorage.getItem('userName') ||
-       'DUAL')
-      .trim() || ''
-    );
+</script>
+
+<style>
+ /* orb */
+.orb {
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+/* núcleo animado */
+.orb-core {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+
+  background:
+    radial-gradient(circle at 30% 30%, var(--orb-accent), transparent 60%),
+    radial-gradient(circle at 70% 70%, var(--orb-primary), var(--orb-secondary));
+
+  box-shadow:
+    0 0 18px var(--orb-primary),
+    0 0 36px rgba(120,227,255,0.4);
+
+  animation: orbSpin var(--orb-speed) linear infinite;
+}
+
+/* animações */
+@keyframes orbSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbPulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+/* estado speaking */
+#orb-root.speaking .orb-core {
+  animation:
+    orbSpin 2s linear infinite,
+    orbPulse 0.5s ease-in-out infinite alternate;
+}
+
+/* animações */
+@keyframes orbSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbPulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+/* estado speaking */
+#orb-root.speaking .orb-core {
+  animation:
+    orbSpin 2s linear infinite,
+    orbPulse 0.5s ease-in-out infinite alternate;
+}
+
+</style>
+
+
+<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/o0.js"></script>
+
+<!--
+<script type="module" src="https://kodux78k.github.io/oi-Dual/js/main.js"defer></script>
+-->
+
+<script>
+
+(function() {
+  window.DI = window.DI || {};
+
+  // Estado central
+  DI.state = {
+    name: 'DUAL',
+    seed: 0,
+    h1: 180,
+    h2: 320,
+    tone: 'cool',
+    mode: 'classic'
+  };
+
+  function di_seed(name) {
+    const safe = (name || 'DUAL').trim() || 'DUAL';
+    let seed = 0;
+    for (let i = 0; i < safe.length; i++) seed += safe.charCodeAt(i);
+    return seed;
   }
 
-  function di_setText(sel, value) {
-    const el = document.querySelector(sel);
-    if (el) el.textContent = value;
+  function di_compute(name) {
+    const safe = (name || 'DUAL').trim() || 'DUAL';
+    const seed = di_seed(safe);
+    const h1 = seed % 360;
+    const h2 = (seed * 37) % 360;
+    const tone = h1 > 180 ? 'warm' : 'cool';
+    const mode = seed % 2 === 0 ? 'fusion' : 'classic';
+    return { safe, seed, h1, h2, tone, mode };
   }
 
-  function di_setHtml(sel, html) {
-    const el = document.querySelector(sel);
-    if (el) el.innerHTML = html;
+  function di_applyRootVars(name) {
+    const data = di_compute(name);
+    DI.state = data;
+    const root = document.documentElement;
+
+    root.style.setProperty('--kob-voice-primary', `hsl(${data.h1} 100% 55%)`);
+    root.style.setProperty('--kob-voice-secondary', `hsl(${data.h2} 90% 45%)`);
+    root.style.setProperty('--arch-color', `hsl(${data.h1} 100% 55%)`);
+    root.style.setProperty('--grad-a', `hsl(${data.h1} 100% 55%)`);
+    root.style.setProperty('--grad-b', `hsl(${data.h2} 90% 45%)`);
+
+    root.dataset.diName = data.safe;
+    root.dataset.arch = data.safe;
+    root.dataset.tone = data.tone;
+    root.dataset.mode = data.mode;
+  }
+
+  function di_makeOrbAvatar(name, size = 36) {
+    const data = di_compute(name);
+    const gid = 'g' + data.seed.toString(36);
+    return `
+      <svg width="${size}" height="${size}" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="${gid}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="hsl(${data.h1} 100% 55%)"/>
+            <stop offset="100%" stop-color="hsl(${data.h2} 90% 45%)"/>
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="7" fill="#071018"/>
+        <circle cx="16" cy="16" r="9" fill="url(#${gid})" opacity="0.25"/>
+        <circle cx="16" cy="16" r="7" fill="url(#${gid})"/>
+        <circle cx="16" cy="16" r="13" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+      </svg>
+    `;
+  }
+
+  function di_renderOrb(selector, name, size) {
+    const el = document.querySelector(selector);
+    if (!el) return;
+    el.classList.add('di-orb-shell');
+    el.style.setProperty('--orb-size', size + 'px');
+    el.dataset.arch = name;
+    el.innerHTML = di_makeOrbAvatar(name, size);
   }
 
   function di_syncNameUI(name) {
-    const safe = (name || '').trim() || 'Convidado';
-
+    const safe = (name || '').trim() || 'DUAL';
     localStorage.setItem('di_userName', safe);
     localStorage.setItem('userName', safe);
+    di_applyRootVars(safe);
 
-    di_setText('#lblName', safe);
-    di_setText('#actName', safe);
-    di_setText('#smallText', safe);
-    di_setText('#hudStatus', safe);
+    const setText = (sel, val) => {
+      const el = document.querySelector(sel);
+      if (el) el.textContent = val;
+    };
 
     const activeKey = window.STATE?.keys?.find?.(k => k.active);
-    di_setText('#smallIdent', activeKey ? activeKey.name : '--');
-    di_setText('#actBadge', activeKey ? `key:${activeKey.name}` : 'v:--');
+    const keyName = activeKey ? activeKey.name : '--';
 
-    const mainOrb = document.querySelector('#main-orb');
-    if (mainOrb && typeof window.makeOrbAvatar === 'function') {
-      mainOrb.innerHTML = window.makeOrbAvatar(safe, 48);
-    }
+    setText('#lblName', safe);
+    setText('#actName', safe);
+  //  setText('#smallText', safe);
+    setText('#hudStatus', safe);
+    setText('#smallIdent', keyName);
+    setText('#actBadge', activeKey ? `key:${keyName}` : 'v:--');
 
-    const avatarTarget = document.querySelector('#avatarTarget');
-    if (avatarTarget && typeof window.makeOrbAvatar === 'function') {
-      avatarTarget.innerHTML = window.makeOrbAvatar(safe, 64);
-    }
-
-    const smallMiniAvatar = document.querySelector('#smallMiniAvatar');
-    if (smallMiniAvatar && typeof window.makeOrbAvatar === 'function') {
-      smallMiniAvatar.innerHTML = window.makeOrbAvatar(safe, 24);
-    }
-
-    const actMiniAvatar = document.querySelector('#actMiniAvatar');
-    if (actMiniAvatar && typeof window.makeOrbAvatar === 'function') {
-      actMiniAvatar.innerHTML = window.makeOrbAvatar(safe, 24);
-    }
+    di_renderOrb('#main-orb', safe, 48);
+    di_renderOrb('#avatarTarget', safe, 64);
+    di_renderOrb('#smallMiniAvatar', safe, 24);
+    di_renderOrb('#actMiniAvatar', safe, 24);
   }
 
   function di_bindLiveName() {
-    const inputs = [
-      document.querySelector('#inputUser'),
-      document.querySelector('#infodoseNameInput')
-    ].filter(Boolean);
+    const input = document.querySelector('#inputUser') || document.querySelector('#infodoseNameInput');
+    if (!input) return;
 
-    const initial = di_getSafeName();
-
-    inputs.forEach(inp => {
-      if (!inp) return;
-      if (!inp.value) inp.value = initial;
-
-      const onChange = () => di_syncNameUI(inp.value);
-      inp.addEventListener('input', onChange);
-      inp.addEventListener('change', onChange);
-    });
-
+    const initial = (input.value || localStorage.getItem('di_userName') || 'DUAL').trim() || 'DUAL';
+    input.value = initial;
     di_syncNameUI(initial);
 
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'di_userName' || e.key === 'userName') {
-        di_syncNameUI(e.newValue);
-      }
-    });
+    input.addEventListener('input', () => di_syncNameUI(input.value));
+    input.addEventListener('change', () => di_syncNameUI(input.value));
 
     document.addEventListener('di:name:update', (e) => {
       di_syncNameUI(e.detail?.name);
     });
   }
 
-  window.di_syncNameUI = di_syncNameUI;
-  window.di_bindLiveName = di_bindLiveName;
+  // Expor API pública
+  DI.applyRootVars = di_applyRootVars;
+  DI.makeOrbAvatar = di_makeOrbAvatar;
+  DI.renderOrb = di_renderOrb;
+  DI.syncNameUI = di_syncNameUI;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', di_bindLiveName);
@@ -354,17 +603,1162 @@ function updateInterface(name){
     di_bindLiveName();
   }
 })();
+
 </script>
-<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/inline-000.js"></script>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/o0.js"></script>
+
+
+
 <script>
+(() => {
+  'use strict';
+
+  const ORACLE = {
+    version: 'v2',
+    ready: false,
+
+    state: {
+      active: true,
+      floatingBar: false,
+      fusionCardOpen: false,
+      orbHeld: false,
+      voiceEnabled: true,
+      ttsPlaying: false,
+      ttsPaused: false,
+      lastEvent: null,
+      lastText: '',
+      archetype: localStorage.getItem('di_arch') || 'Atlas',
+      user: localStorage.getItem('di_userName') || 'Convidado',
+      model: localStorage.getItem('di_modelName') || 'default',
+      theme: localStorage.getItem('di_theme') || 'system'
+    },
+
+    memory: {
+      runtime: {},
+      session: {},
+      persistent: {},
+      external: {}
+    },
+
+    modules: {},
+    hooks: {},
+    log: [],
+
+    init() {
+      this.load();
+      this.bind();
+      this.installDefaults();
+      this.emit('oracle:ready', { version: this.version });
+      this.ready = true;
+      this.renderStatus();
+    },
+
+    installDefaults() {
+      if (!this.memory.persistent.history) this.memory.persistent.history = [];
+      if (!this.memory.runtime.flags) this.memory.runtime.flags = {};
+    },
+
+    bind() {
+      const onReady = () => {
+        this.hookDOM();
+        this.bindUI();
+        this.bindLongPressOrb();
+        this.bindSymbolBarDrag();
+        this.bindTTS();
+        this.renderStatus();
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', onReady, { once: true });
+      } else {
+        onReady();
+      }
+
+      window.addEventListener('beforeunload', () => this.save());
+    },
+
+    hookDOM() {
+      this.hooks.orb = document.querySelector('#btn-arch, [data-orb], .orb-btn');
+      this.hooks.symbolBar = document.querySelector('#symbol-bar, .symbol-bar, .symbol-wrap');
+      this.hooks.fusionCard = document.querySelector('#fusion-card, .fusion-card, #cobcard');
+      this.hooks.status = document.querySelector('[data-oracle-status], #oracle-status, .oracle-status');
+      this.hooks.ttsPlay = document.querySelector('#btn-play, [data-tts-play]');
+      this.hooks.ttsPrev = document.querySelector('#btn-prev, [data-tts-prev]');
+      this.hooks.ttsNext = document.querySelector('#btn-next, [data-tts-next]');
+      this.hooks.ttsStop = document.querySelector('#tts-stop, [data-tts-stop]');
+      this.hooks.ttsText = document.querySelector('#tts-text, textarea[name="tts"], [data-tts-text]');
+      this.hooks.toggleBar = document.querySelector('[data-toggle-bar], #btn-bar, .btn-bar');
+      this.hooks.toggleCard = document.querySelector('[data-toggle-card], #btn-card, .btn-card');
+    },
+
+    bindUI() {
+      if (this.hooks.toggleBar) {
+        this.hooks.toggleBar.addEventListener('click', () => this.dispatch('symbol:toggle'));
+      }
+
+      if (this.hooks.toggleCard) {
+        this.hooks.toggleCard.addEventListener('click', () => this.dispatch('fusion:toggle'));
+      }
+
+      document.addEventListener('click', (ev) => {
+        const t = ev.target.closest('[data-oracle-event]');
+        if (!t) return;
+        const type = t.getAttribute('data-oracle-event');
+        const payload = t.getAttribute('data-payload');
+        let parsed = {};
+        try { parsed = payload ? JSON.parse(payload) : {}; } catch (_) {}
+        this.dispatch(type, parsed);
+      });
+
+      document.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape') {
+          this.dispatch('tts:stop');
+          this.dispatch('fusion:close');
+        }
+      });
+    },
+
+    bindLongPressOrb() {
+      const orb = this.hooks.orb;
+      if (!orb) return;
+
+      let timer = null;
+      let held = false;
+      const start = () => {
+        held = false;
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          held = true;
+          this.dispatch('orb:hold');
+        }, 650);
+      };
+
+      const cancel = () => {
+        clearTimeout(timer);
+        if (!held) {
+          this.dispatch('orb:tap');
+        }
+      };
+
+      orb.addEventListener('pointerdown', start);
+      orb.addEventListener('pointerup', cancel);
+      orb.addEventListener('pointerleave', () => clearTimeout(timer));
+      orb.addEventListener('pointercancel', () => clearTimeout(timer));
+      orb.addEventListener('contextmenu', (e) => e.preventDefault());
+    },
+
+    bindSymbolBarDrag() {
+      const bar = this.hooks.symbolBar;
+      if (!bar) return;
+
+      let dragging = false;
+      let sx = 0;
+      let sy = 0;
+      let bx = 0;
+      let by = 0;
+
+      const isFloatingHandle = (el) => el.closest('[data-drag-handle], .drag-handle, .symbol-bar-handle, #btn-arch');
+
+      const onDown = (ev) => {
+        if (!isFloatingHandle(ev.target)) return;
+        dragging = true;
+        const rect = bar.getBoundingClientRect();
+        sx = ev.clientX;
+        sy = ev.clientY;
+        bx = rect.left;
+        by = rect.top;
+        bar.classList.add('is-dragging', 'floating');
+        ev.preventDefault();
+      };
+
+      const onMove = (ev) => {
+        if (!dragging) return;
+        const dx = ev.clientX - sx;
+        const dy = ev.clientY - sy;
+        bar.style.position = 'fixed';
+        bar.style.left = `${Math.max(6, bx + dx)}px`;
+        bar.style.top = `${Math.max(6, by + dy)}px`;
+        bar.style.right = 'auto';
+        bar.style.bottom = 'auto';
+      };
+
+      const onUp = () => {
+        if (!dragging) return;
+        dragging = false;
+        bar.classList.remove('is-dragging');
+        this.state.floatingBar = true;
+        this.save();
+      };
+
+      bar.addEventListener('pointerdown', onDown);
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    },
+
+    bindTTS() {
+      const play = this.hooks.ttsPlay;
+      const prev = this.hooks.ttsPrev;
+      const next = this.hooks.ttsNext;
+      const stop = this.hooks.ttsStop;
+
+      if (play) play.addEventListener('click', () => this.dispatch('tts:toggle'));
+      if (prev) prev.addEventListener('click', () => this.dispatch('tts:prev'));
+      if (next) next.addEventListener('click', () => this.dispatch('tts:next'));
+      if (stop) stop.addEventListener('click', () => this.dispatch('tts:stop'));
+    },
+
+    dispatch(type, payload = {}) {
+      this.state.lastEvent = type;
+      this.logEvent(type, payload);
+
+      const handlers = {
+        'oracle:ready': () => {},
+        'orb:tap': () => this.toggleFusionCard(),
+        'orb:hold': () => this.toggleFusionCard(true),
+        'symbol:toggle': () => this.toggleSymbolBar(),
+        'fusion:toggle': () => this.toggleFusionCard(),
+        'fusion:open': () => this.openFusionCard(),
+        'fusion:close': () => this.closeFusionCard(),
+        'tts:toggle': () => this.toggleTTS(),
+        'tts:play': () => this.playTTS(payload.text || this.readTTSInput()),
+        'tts:pause': () => this.pauseTTS(),
+        'tts:resume': () => this.resumeTTS(),
+        'tts:stop': () => this.stopTTS(),
+        'tts:prev': () => this.emit('tts:prev', payload),
+        'tts:next': () => this.emit('tts:next', payload),
+        'memory:set': () => this.setMemory(payload.layer, payload.key, payload.value),
+        'memory:get': () => this.getMemory(payload.layer, payload.key),
+        'memory:sync': () => this.save(),
+        'state:set': () => this.setState(payload.key, payload.value),
+        'state:toggle': () => this.toggleState(payload.key),
+        'archetype:set': () => this.setArchetype(payload.value),
+        'status:refresh': () => this.renderStatus(),
+        'ui:floating:on': () => this.setFloatingBar(true),
+        'ui:floating:off': () => this.setFloatingBar(false)
+      };
+
+      const fn = handlers[type];
+      if (fn) {
+        return fn();
+      }
+
+      this.emit(type, payload);
+      this.save();
+    },
+
+    emit(type, payload = {}) {
+      const event = new CustomEvent(type, { detail: payload });
+      window.dispatchEvent(event);
+      document.dispatchEvent(event);
+      Object.values(this.modules).forEach(mod => {
+        try {
+          if (typeof mod?.dispatch === 'function') mod.dispatch(type, payload, this);
+        } catch (_) {}
+      });
+    },
+
+    register(name, module) {
+      this.modules[name] = module;
+      return module;
+    },
+
+    setState(key, value) {
+      this.state[key] = value;
+      this.save();
+      this.renderStatus();
+      return value;
+    },
+
+    toggleState(key) {
+      this.state[key] = !this.state[key];
+      this.save();
+      this.renderStatus();
+      return this.state[key];
+    },
+
+    setArchetype(value) {
+      this.state.archetype = value;
+      localStorage.setItem('di_arch', value);
+      this.emit('archetype:changed', { value });
+      this.save();
+      this.renderStatus();
+    },
+
+    setFloatingBar(on) {
+      const bar = this.hooks.symbolBar;
+      if (!bar) return;
+      this.state.floatingBar = !!on;
+      bar.classList.toggle('floating', !!on);
+      bar.style.position = on ? 'fixed' : '';
+      this.save();
+      this.renderStatus();
+    },
+
+    toggleSymbolBar(force) {
+      const bar = this.hooks.symbolBar;
+      if (!bar) return;
+      const next = typeof force === 'boolean' ? force : !bar.classList.contains('open');
+      bar.classList.toggle('open', next);
+      bar.classList.toggle('floating', this.state.floatingBar);
+      this.save();
+      this.renderStatus();
+      this.emit('symbol:changed', { open: next });
+    },
+
+    openFusionCard() {
+      const card = this.hooks.fusionCard;
+      if (!card) return;
+      card.hidden = false;
+      card.classList.add('open');
+      this.state.fusionCardOpen = true;
+      this.save();
+      this.renderStatus();
+    },
+
+    closeFusionCard() {
+      const card = this.hooks.fusionCard;
+      if (!card) return;
+      card.classList.remove('open');
+      card.hidden = true;
+      this.state.fusionCardOpen = false;
+      this.save();
+      this.renderStatus();
+    },
+
+    toggleFusionCard(forceFocus = false) {
+      const card = this.hooks.fusionCard;
+      if (!card) return;
+      const shouldOpen = forceFocus ? true : !this.state.fusionCardOpen;
+      if (shouldOpen) this.openFusionCard();
+      else this.closeFusionCard();
+      this.emit('fusion:changed', { open: this.state.fusionCardOpen });
+    },
+
+    readTTSInput() {
+      const el = this.hooks.ttsText;
+      if (!el) return this.state.lastText || '';
+      const value = 'value' in el ? el.value : el.textContent;
+      return (value || '').trim();
+    },
+
+    speak(text) {
+      if (!text) return;
+
+      try {
+        speechSynthesis.cancel();
+      } catch (_) {}
+
+      const utter = new SpeechSynthesisUtterance(text);
+      const lang = localStorage.getItem('di_lang') || 'pt-BR';
+      utter.lang = lang;
+      utter.rate = Number(localStorage.getItem('di_ttsRate') || 1);
+      utter.pitch = Number(localStorage.getItem('di_ttsPitch') || 1);
+      utter.volume = Number(localStorage.getItem('di_ttsVolume') || 1);
+
+      utter.onstart = () => {
+        this.state.ttsPlaying = true;
+        this.state.ttsPaused = false;
+        this.save();
+        this.renderStatus();
+      };
+
+      utter.onend = () => {
+        this.state.ttsPlaying = false;
+        this.state.ttsPaused = false;
+        this.save();
+        this.renderStatus();
+      };
+
+      utter.onerror = () => {
+        this.state.ttsPlaying = false;
+        this.state.ttsPaused = false;
+        this.save();
+        this.renderStatus();
+      };
+
+      speechSynthesis.speak(utter);
+      this.state.lastText = text;
+      this.save();
+      this.renderStatus();
+    },
+
+    playTTS(text) {
+      const source = (text || this.readTTSInput() || this.state.lastText || '').trim();
+      if (!source) return;
+      this.speak(source);
+      this.emit('tts:playback', { text: source });
+    },
+
+    pauseTTS() {
+      try {
+        if (speechSynthesis.speaking && !speechSynthesis.paused) {
+          speechSynthesis.pause();
+          this.state.ttsPaused = true;
+          this.state.ttsPlaying = true;
+        }
+      } catch (_) {}
+      this.save();
+      this.renderStatus();
+    },
+
+    resumeTTS() {
+      try {
+        if (speechSynthesis.paused) {
+          speechSynthesis.resume();
+          this.state.ttsPaused = false;
+          this.state.ttsPlaying = true;
+        }
+      } catch (_) {}
+      this.save();
+      this.renderStatus();
+    },
+
+    stopTTS() {
+      try {
+        speechSynthesis.cancel();
+      } catch (_) {}
+      this.state.ttsPlaying = false;
+      this.state.ttsPaused = false;
+      this.save();
+      this.renderStatus();
+    },
+
+    toggleTTS() {
+      if (speechSynthesis.paused) return this.resumeTTS();
+      if (speechSynthesis.speaking) return this.pauseTTS();
+      return this.playTTS();
+    },
+
+    setMemory(layer, key, value) {
+      if (!this.memory[layer]) this.memory[layer] = {};
+      this.memory[layer][key] = value;
+
+      if (layer === 'persistent') this.save();
+      if (layer === 'session') sessionStorage.setItem(`di_oracle_session_${key}`, JSON.stringify(value));
+      return value;
+    },
+
+    getMemory(layer, key) {
+      if (layer === 'persistent') return this.memory.persistent?.[key];
+      if (layer === 'runtime') return this.memory.runtime?.[key];
+      if (layer === 'session') return this.memory.session?.[key];
+      if (layer === 'external') return this.memory.external?.[key];
+      return undefined;
+    },
+
+    load() {
+      try {
+        const raw = localStorage.getItem('di_oracle_v2');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          this.memory.persistent = parsed.memory?.persistent || {};
+          this.state = { ...this.state, ...(parsed.state || {}) };
+          this.log = Array.isArray(parsed.log) ? parsed.log : [];
+        }
+      } catch (_) {}
+
+      try {
+        const keys = Object.keys(sessionStorage);
+        keys.forEach((k) => {
+          if (k.startsWith('di_oracle_session_')) {
+            const key = k.replace('di_oracle_session_', '');
+            try {
+              this.memory.session[key] = JSON.parse(sessionStorage.getItem(k));
+            } catch {
+              this.memory.session[key] = sessionStorage.getItem(k);
+            }
+          }
+        });
+      } catch (_) {}
+    },
+
+    save() {
+      try {
+        const payload = {
+          version: this.version,
+          state: this.state,
+          memory: {
+            persistent: this.memory.persistent
+          },
+          log: this.log.slice(-200)
+        };
+        localStorage.setItem('di_oracle_v2', JSON.stringify(payload));
+        localStorage.setItem('di_arch', this.state.archetype || 'Atlas');
+        localStorage.setItem('di_userName', this.state.user || 'Convidado');
+        localStorage.setItem('di_modelName', this.state.model || 'default');
+        localStorage.setItem('di_theme', this.state.theme || 'system');
+      } catch (_) {}
+    },
+
+    logEvent(type, payload) {
+      const item = {
+        at: Date.now(),
+        type,
+        payload
+      };
+      this.log.push(item);
+      if (!this.memory.persistent.history) this.memory.persistent.history = [];
+      this.memory.persistent.history.push(item);
+      this.memory.persistent.history = this.memory.persistent.history.slice(-200);
+    },
+
+    renderStatus() {
+      const status = this.hooks.status;
+      if (!status) return;
+
+      const playState = this.state.ttsPaused
+        ? 'PAUSADO'
+        : this.state.ttsPlaying
+          ? 'TOCANDO'
+          : 'PRONTO';
+
+      const symbolState = this.hooks.symbolBar?.classList.contains('open') ? 'ABERTA' : 'FECHADA';
+      const cardState = this.state.fusionCardOpen ? 'ABERTA' : 'FECHADA';
+      const orbitState = this.state.floatingBar ? 'FLOAT' : 'FIXA';
+
+      status.textContent =
+        `ORACLE ${this.version} · ${this.state.archetype} · TTS ${playState} · BAR ${symbolState} · CARD ${cardState} · ${orbitState}`;
+    }
+  };
+
+  window.ORACLE = ORACLE;
+
+  // Ponte leve para módulos já existentes
+  window.DI = window.DI || {};
+  window.DI.oracle = ORACLE;
+
+  // Integração automática com botões comuns de arquétipos
+  const archetypeButtons = [
+    ['[data-arch="Atlas"]', 'Atlas'],
+    ['[data-arch="Nova"]', 'Nova'],
+    ['[data-arch="Vitalis"]', 'Vitalis'],
+    ['[data-arch="Pulse"]', 'Pulse'],
+    ['[data-arch="Artemis"]', 'Artemis'],
+    ['[data-arch="Serena"]', 'Serena'],
+    ['[data-arch="Kaos"]', 'Kaos'],
+    ['[data-arch="Genus"]', 'Genus'],
+    ['[data-arch="Lumine"]', 'Lumine'],
+    ['[data-arch="Solus"]', 'Solus'],
+    ['[data-arch="Rhea"]', 'Rhea'],
+    ['[data-arch="Aion"]', 'Aion']
+  ];
+
+  const attachArchetypeButtons = () => {
+    archetypeButtons.forEach(([selector, name]) => {
+      document.querySelectorAll(selector).forEach((btn) => {
+        btn.addEventListener('click', () => ORACLE.dispatch('archetype:set', { value: name }));
+      });
+    });
+  };
+
+  const mo = new MutationObserver(() => attachArchetypeButtons());
+  mo.observe(document.documentElement, { childList: true, subtree: true });
+
+  ORACLE.init();
+})();
+</script>
+
+
+<div id="root">
+
+
+<div class="wrap">
+  <div class="content">
+    <iframe id="frame" src="about:blank"></iframe>
+    <div id="kob-tts-outline"></div>
+  </div>
+
+  <!-- HUD Inteligente -->
+  <div class="symbol-bar floating" id="symbolBar">
+          <div class="symbol-wrap">
+
+          <div class="drawer-toggle" onclick="toggleDrawer()" title="Abrir Engine de Background">🎛️</div>
+        </div>
+
+  
+    <!-- Botão Menu -->
+    <div class="toggle-wrap">
+      <button class="symbol-button main-toggle" id="toggleBtn" title="Menu / Iniciar">≡</button>
+    </div>
+
+    <!-- Controles de Navegação de Leitura -->
+    <div class="symbol-wrap">
+      <button class="symbol-button" id="btn-prev" title="Voltar Bloco">◀</button>
+    </div>
+    <div class="symbol-wrap">
+      <button class="symbol-button" id="btn-play" title="Play/Pause">▶</button>
+    </div>
+     <div class="symbol-wrap">
+    <button class="symbol-button" id="tts-stop" title="Parar">■</button>
+  </div>
+
+    <!-- Troca de Arquétipo com ORB integrado (Sempre visível) -->
+    <button class="symbol-button" id="btn-arch" title="Trocar Arquétipo de Voz">
+      <div class="orb-microphone-container">
+        <div class="tts-orb-mini">
+          <div class="orb" id="main-orb">
+            <div class="orb-core"></div>
+          </div>
+        </div>
+<!--
+        <div class="voice-indicator" id="voiceIndicator"></div> -->
+
+      </div>
+    </button>
+
+    <!-- Outros atalhos -->
+    <div class="symbol-wrap">
+      <button class="symbol-button" data-id="phi" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/78F/">🌌</button>
+    </div>
+    <div class="symbol-wrap">
+      <button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/78FFD/">🛋️</button>
+    </div>
+  
+
+ <div class="symbol-wrap">
+      <button class="symbol-button" data-id="home" data-url="https://kodux78k.github.io/oiDual-idHome/">◌</button>
+    </div>
+    <div class="symbol-wrap">
+      <button class="symbol-button" data-id="doc" data-url="https://kodux78k.github.io/info-Doc/index.html">◘</button>
+    </div>
+
+    <div class="hud-info" id="hudStatus">KOBLLUX · ORB NEXUS</div>
+  </div>
+</div>
+       <div id="arch-overlay"></div>  
+<!-- Scripts -->
+<script type="module" src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kobdh0-main.js"></script>
+
+</div>
+
+
+
+
+
+<script>
+
+const dock = document.querySelector('.kob-tts-dock');
+
+let idleTimer;
+
+function resetIdle(){
+  dock.classList.remove('idle');
+
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(()=>{
+    dock.classList.add('idle');
+  }, 1870); // 1870  mili segundos parado
+}
+
+/* eventos que despertam o dock */
+['pointerdown','pointermove','touchstart','mousemove']
+.forEach(ev=>{
+  document.addEventListener(ev, resetIdle, {passive:true});
+});
+
+resetIdle();
+</script>
+
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  KOBLLUX · LONG-PRESS URL EDITOR        ║
+     ║  Segurar 3s → edita data-url do botão   ║
+     ║  Clique curto → sistema externo cuida   ║
+     ╚══════════════════════════════════════════╝ -->
+
+
+<div id="kblx-back">
+  <div id="kblx-panel">
+    <div class="p-chip">⌘ KOBLLUX HUD · EDITOR DE ROTA</div>
+    <div class="p-title" id="kblx-ttl">Botão</div>
+    <label class="p-lbl" for="kblx-inp">Novo valor para data-url</label>
+    <input id="kblx-inp" type="text" placeholder="arquivo.html  ou  https://..." spellcheck="false" autocomplete="off">
+    <div class="kblx-row">
+      <button class="kblx-btn kblx-save" id="kblx-btn-save">⊙ Salvar no botão</button>
+      <button class="kblx-btn kblx-close" id="kblx-btn-close">✕ Fechar</button>
+    </div>
+  </div>
+</div>
+
+
+<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/78F/css/main.css">
+
+<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/78F/css/main-ovr.css">
+
+<div class="bg-gradient-base"></div>
+  <div id="bg-layer-fixed"></div>
+
+  <div id="drawerOverlay" onclick="toggleDrawer()"></div>
+
+  <aside class="drawer" id="drawerPanel" aria-label="Background Engine">
+    <div class="drawer-header">
+      <h2>⚙️ Background Engine</h2>
+      <button class="drawer-close" onclick="toggleDrawer()" title="Fechar">×</button>
+    </div>
+
+    <div class="drawer-body">
+      <div class="panel-section">
+        <label class="section-label"><span>Background</span><span id="bgStatusText">Nenhum</span></label>
+        <div class="tiny-note">Ajuste a camada fixa do app e sincronize com localStorage.</div>
+      </div>
+
+      <div class="panel-section">
+        <label class="section-label"><span>Opacidade</span><span id="val-op">15%</span></label>
+        <input id="bgOpacity" type="range" min="0" max="100" value="15" oninput="updateBgAttr('opacity', this.value)">
+      </div>
+
+      <div class="panel-section">
+        <label class="section-label"><span>Mix Blend Mode</span><span>CSS</span></label>
+        <select id="bgBlend" onchange="updateBgAttr('blend', this.value)">
+          <option value="normal">Normal</option>
+          <option value="multiply">Multiply (Escurecer)</option>
+          <option value="screen">Screen (Clarear)</option>
+          <option value="overlay" selected="">Overlay (Realçar)</option>
+          <option value="soft-light">Soft Light (Suave)</option>
+          <option value="luminosity">Luminosity (Fantasma)</option>
+        </select>
+      </div>
+
+      <div class="panel-section">
+        <label class="section-label"><span>Presets de Estilo</span><span>BG</span></label>
+        <div class="preset-grid">
+          <button class="preset-btn" data-bg-preset="ghost" onclick="applyPreset('ghost')">Fantasma</button>
+          <button class="preset-btn active" data-bg-preset="vivid" onclick="applyPreset('vivid')">Vívido</button>
+          <button class="preset-btn" data-bg-preset="deep" onclick="applyPreset('deep')">Profundo</button>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <label class="section-label"><span>Biblioteca Local</span><span id="libCount">0</span></label>
+        <div class="bg-thumbs" id="thumb-list"></div>
+        <label class="btn-upload">
+          + Fazer Upload de Imagem
+          <input type="file" id="file-upload" accept="image/*" hidden="" onchange="handleUpload(this)">
+        </label>
+      </div>
+
+      <div class="panel-section">
+        <label class="section-label"><span>FX Lab</span><span>Upload / Frame</span></label>
+        <div class="fx-stage">
+          <div class="fx-actions">
+            <button class="btn-mini" onclick="loadCurrentFrameToFX()">Carregar quadro atual</button>
+            <label class="btn-mini" style="justify-content:center;">
+              Upload imagem
+              <input type="file" id="fx-upload" accept="image/*" hidden="">
+            </label>
+            <button class="btn-download" onclick="downloadFX()">Download PNG</button>
+          </div>
+
+          <div class="fx-canvas-wrap">
+            <canvas id="fxCanvas" width="1200" height="800"></canvas>
+          </div>
+
+          <div class="preset-grid">
+            <button class="preset-btn active" data-fx-mode="texture" onclick="setFXMode('texture')">Textura</button>
+            <button class="preset-btn" data-fx-mode="liquid" onclick="setFXMode('liquid')">Líquido</button>
+            <button class="preset-btn" data-fx-mode="paint" onclick="setFXMode('paint')">Tinta</button>
+          </div>
+
+          <div class="panel-section" style="padding:14px;">
+            <label class="section-label"><span>Blur gaussiano</span><span id="fxBlurVal">4</span></label>
+            <input id="fxBlur" type="range" min="0" max="24" value="4">
+          </div>
+
+          <div class="panel-section" style="padding:14px;">
+            <label class="section-label"><span>Intensidade</span><span id="fxIntensityVal">55</span></label>
+            <input id="fxIntensity" type="range" min="0" max="100" value="55">
+          </div>
+
+          <div class="panel-section" style="padding:14px;">
+            <label class="section-label"><span>Liquify</span><span id="fxLiquifyVal">0</span></label>
+            <input id="fxLiquify" type="range" min="0" max="100" value="0">
+          </div>
+
+          <div class="panel-section" style="padding:14px;">
+            <label class="section-label"><span>Grain / textura</span><span id="fxGrainVal">35</span></label>
+            <input id="fxGrain" type="range" min="0" max="100" value="35">
+          </div>
+
+          <div class="panel-section" style="padding:14px;">
+            <label class="section-label"><span>Contraste</span><span id="fxContrastVal">108</span></label>
+            <input id="fxContrast" type="range" min="80" max="140" value="108">
+          </div>
+
+          <div class="panel-section" style="padding:14px;">
+            <label class="section-label"><span>Saturação</span><span id="fxSaturationVal">102</span></label>
+            <input id="fxSaturation" type="range" min="60" max="150" value="102">
+          </div>
+
+          <button class="btn-action" onclick="applyFXToBackground()">Aplicar FX no Background</button>
+          <div class="tiny-note">Se a imagem for muito grande, o motor reduz a área para manter o render leve.</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+     
+
+    
+
+ <script src="https://kodux78k.github.io/oiDual--Y-/M0D/78F/js/modules/inline-0.js"></script>
+
+  <script src="https://kodux78k.github.io/oiDual--Y-/M0D/78F/js/inline-bg.js"></script>
+
+  
+
+<style>
+
+ .bg-gradient-base {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(255,255,255,.55), transparent 45%);
+      pointer-events: none;
+      z-index: var(--z-base);
+    }
+
+  .wrap {
+      position: relative;
+padding:0 0 0px;
+      z-index: var(--z-base);
+    }
+
+  #bg-layer-fixed {
+      position: fixed;
+      inset: 0;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      opacity: .15;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      z-index: var(--z-base);
+    }
+
+ /* orb */
+.orb {
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+  display: flex;
+  place-items: center;
+}
+
+/* núcleo animado */
+.orb-core {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+
+  background:
+    radial-gradient(circle at 30% 30%, var(--orb-accent), transparent 60%),
+    radial-gradient(circle at 70% 70%, var(--orb-primary), var(--orb-secondary));
+
+  box-shadow:
+    0 0 18px var(--orb-primary),
+    0 0 36px rgba(120,227,255,0.4);
+
+  animation: orbSpin var(--orb-speed) linear infinite;
+}
+
+/* animações */
+@keyframes orbSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbPulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+/* estado speaking */
+#orb-root.speaking .orb-core {
+  animation:
+    orbSpin 2s linear infinite,
+    orbPulse 0.5s ease-in-out infinite alternate;
+}
+
+/* animações */
+@keyframes orbSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbPulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+/* estado speaking */
+#orb-root.speaking .orb-core {
+  animation:
+    orbSpin 2s linear infinite,
+    orbPulse 0.5s ease-in-out infinite alternate;
+}
+
+</style>
+
+
+  <script>
+    console.log("Sistema Pronto.");
+  </script>
+
+<script>
+const ARCHETYPES = ["atlas","nova","vitalis","pulse","kaos","kodux","lumine","aion","kobllux","artemis","serena","genus","solus","rhea","uno","dual","trinity","infodose","horus","bllue", localStorage.getItem("di_userName")];
+</script>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/0x03_expandir_V_D7.js"></script>
+
+
+<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/0x07_selar_B_D3.js"></script>
+
+
+<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kob-mstr.js"></script>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/js/kob-mestre-878.js"></script>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/o0.js"></script>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/js/koblluxv30.js"></script>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/js/kodbrain-66.js"></script>
+
+<style>
+
+.symbol-wrap, .symbol-bar{  background-color: rgba(0,0,0,0.0.1);}
+#toggleBtn,{
+width: 18px;
+  height: 18px;
+  background-color: rgba(0,0,0,0.0.3);
+}
+
+
+
+
+  .symbol-button.di-icon-ready{
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .symbol-button.di-icon-ready .di-btn-icon-img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  .symbol-button.di-icon-ready .di-btn-icon-fallback{
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .symbol-button.di-icon-ready .di-btn-icon-label{
+    display: none;
+  }
+</style>
+
+<script>
+(() => {
+  const CACHE_KEY = 'di_btn_icon_cache_v2';
+  const buttons = () => Array.from(document.querySelectorAll('.symbol-button[data-url]'));
+
+  const loadCache = () => {
+    try { return JSON.parse(localStorage.getItem(CACHE_KEY) || '{}'); }
+    catch { return {}; }
+  };
+
+  const saveCache = (cache) => {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch {}
+  };
+
+  const cache = loadCache();
+
+  const normKey = (url) => {
+    try {
+      const u = new URL(url, location.href);
+      return u.href;
+    } catch {
+      return url;
+    }
+  };
+
+  async function fetchText(url) {
+    const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.text();
+  }
+
+  async function fetchJSON(url) {
+    const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  }
+
+  function pickBestIcon(icons = []) {
+    if (!Array.isArray(icons) || !icons.length) return null;
+
+    const parsed = icons
+      .map(i => ({
+        ...i,
+        sizeNum: (() => {
+          const m = String(i.sizes || '').match(/(\d+)\s*x\s*(\d+)/i);
+          return m ? Math.max(+m[1], +m[2]) : 0;
+        })()
+      }))
+      .sort((a, b) => b.sizeNum - a.sizeNum);
+
+    return (
+      parsed.find(i => String(i.sizes || '').includes('192')) ||
+      parsed.find(i => i.sizeNum >= 192) ||
+      parsed[0] ||
+      null
+    );
+  }
+
+  async function resolveIcon(url) {
+    const key = normKey(url);
+    if (cache[key]) return cache[key];
+
+    try {
+      const base = new URL(key);
+      const html = await fetchText(base.href);
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+
+      const manifestLink = doc.querySelector('link[rel="manifest"]');
+      if (manifestLink) {
+        const manifestUrl = new URL(manifestLink.getAttribute('href'), base).href;
+        try {
+          const manifest = await fetchJSON(manifestUrl);
+          const icon = pickBestIcon(manifest?.icons);
+          if (icon?.src) {
+            const resolved = new URL(icon.src, manifestUrl).href;
+            cache[key] = resolved;
+            saveCache(cache);
+            return resolved;
+          }
+        } catch {}
+      }
+
+      const apple = doc.querySelector(
+        'link[rel="apple-touch-icon"], link[rel="apple-touch-icon-precomposed"]'
+      );
+      if (apple?.href) {
+        const resolved = new URL(apple.getAttribute('href'), base).href;
+        cache[key] = resolved;
+        saveCache(cache);
+        return resolved;
+      }
+
+      const shortcut = doc.querySelector('link[rel="shortcut icon"], link[rel="icon"]');
+      if (shortcut?.href) {
+        const resolved = new URL(shortcut.getAttribute('href'), base).href;
+        cache[key] = resolved;
+        saveCache(cache);
+        return resolved;
+      }
+
+      const fallback = new URL('/favicon.ico', base).href;
+      cache[key] = fallback;
+      saveCache(cache);
+      return fallback;
+    } catch (err) {
+      const fallback = (() => {
+        try { return new URL('/favicon.ico', new URL(key, location.href)).href; }
+        catch { return null; }
+      })();
+
+      if (fallback) {
+        cache[key] = fallback;
+        saveCache(cache);
+      }
+      return fallback;
+    }
+  }
+
+  function paintButton(btn, iconUrl) {
+    if (!btn) return;
+
+    btn.classList.add('di-icon-ready');
+    btn.innerHTML = '';
+
+    const img = document.createElement('img');
+    img.className = 'di-btn-icon-img';
+    img.alt = '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.src = iconUrl;
+
+    img.onerror = () => {
+      const fallback = document.createElement('span');
+      fallback.className = 'di-btn-icon-fallback';
+      fallback.textContent = btn.dataset.fallback || '◉';
+      btn.innerHTML = '';
+      btn.appendChild(fallback);
+    };
+
+    btn.appendChild(img);
+  }
+
+  async function processButton(btn) {
+    const url = btn.dataset.url;
+    if (!url) return;
+
+    const icon = await resolveIcon(url);
+    if (icon) paintButton(btn, icon);
+  }
+
+  async function run() {
+    const list = buttons();
+    await Promise.all(list.map(processButton));
+  }
+
+  function observeDynamicButtons() {
+    const root = document.body;
+    if (!root) return;
+
+    const mo = new MutationObserver(() => {
+      buttons().forEach(btn => {
+        if (btn.dataset.diIconDone === '1') return;
+        btn.dataset.diIconDone = '1';
+        processButton(btn);
+      });
+    });
+
+    mo.observe(root, { childList: true, subtree: true });
+  }
+
+  window.DI_ICON_LOADER = {
+    refresh: run,
+    clearCache() {
+      Object.keys(cache).forEach(k => delete cache[k]);
+      saveCache(cache);
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await run();
+    observeDynamicButtons();
+  });
+})();
+</script>
+
+<script src="https://unpkg.com/lucide@latest"></script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/inline-000.js"></script><script>
 
 // 🔥 ===============================
 // 🔥 ORB SYSTEM · CORE UNIFICADO
 // 🔥 ===============================
 
 // 🔹 GERADOR UNIVERSAL
-function makeOrbAvatar(name, size = 24) {
-  const safe = name || '';
+function makeOrbAvatar(name, size = 36) {
+  const safe = name || 'DUAL';
 
   // seed determinística baseada no nome
   const seed = safe.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
@@ -412,7 +1806,7 @@ window.makeMiniAvatar = (name) => makeOrbAvatar(name, 24);
 // 🔁 UPDATE INTERFACE
 // 🔁 ===============================
 function updateInterface(name){
-  const safe = name || '';
+  const safe = name || 'Convidado';
 
   // 🔹 texto
   els.lblName.innerText = safe;
@@ -437,12 +1831,275 @@ function updateInterface(name){
   els.actName.innerText = safe;
 }
 
-</script>
-<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/o0.js"></script>
+</script><script type="module" src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kobdh0-main.js"></script><script>
 
-  <script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kob-mstr.js"></script>
-  
-<script src="https://kodux78k.github.io/oiDual--Y-/js/78F-bgPanel.js"></script>
-  <script src="https://kodux78k.github.io/oiDual--Y-/js/kob-mestre-878.js"></script>
+const dock = document.querySelector('.kob-tts-dock');
 
-</body></html>
+let idleTimer;
+
+function resetIdle(){
+  dock.classList.remove('idle');
+
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(()=>{
+    dock.classList.add('idle');
+  }, 1870); // 1870  mili segundos parado
+}
+
+/* eventos que despertam o dock */
+['pointerdown','pointermove','touchstart','mousemove']
+.forEach(ev=>{
+  document.addEventListener(ev, resetIdle, {passive:true});
+});
+
+resetIdle();
+</script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/78F/js/modules/inline-0.js"></script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/78F/js/inline-bg.js"></script><script>
+    console.log("Sistema Pronto.");
+  </script><script>
+const ARCHETYPES = ["atlas","nova","vitalis","pulse","kaos","kodux","lumine","aion","kobllux","artemis","serena","genus","solus","rhea","uno","dual","trinity","infodose","horus","bllue", localStorage.getItem("di_userName")];
+</script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/0x03_expandir_V_D7.js"></script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/0x07_selar_B_D3.js"></script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kob-mstr.js"></script><script src="https://kodux78k.github.io/oiDual--Y-/js/kob-mestre-878.js"></script><script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/o0.js"></script><script src="https://kodux78k.github.io/oiDual--Y-/js/koblluxv30.js"></script><script src="https://kodux78k.github.io/oiDual--Y-/js/kodbrain-66.js"></script><script>
+(() => {
+  const CACHE_KEY = 'di_btn_icon_cache_v2';
+  const buttons = () => Array.from(document.querySelectorAll('.symbol-button[data-url]'));
+
+  const loadCache = () => {
+    try { return JSON.parse(localStorage.getItem(CACHE_KEY) || '{}'); }
+    catch { return {}; }
+  };
+
+  const saveCache = (cache) => {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch {}
+  };
+
+  const cache = loadCache();
+
+  const normKey = (url) => {
+    try {
+      const u = new URL(url, location.href);
+      return u.href;
+    } catch {
+      return url;
+    }
+  };
+
+  async function fetchText(url) {
+    const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.text();
+  }
+
+  async function fetchJSON(url) {
+    const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  }
+
+  function pickBestIcon(icons = []) {
+    if (!Array.isArray(icons) || !icons.length) return null;
+
+    const parsed = icons
+      .map(i => ({
+        ...i,
+        sizeNum: (() => {
+          const m = String(i.sizes || '').match(/(\d+)\s*x\s*(\d+)/i);
+          return m ? Math.max(+m[1], +m[2]) : 0;
+        })()
+      }))
+      .sort((a, b) => b.sizeNum - a.sizeNum);
+
+    return (
+      parsed.find(i => String(i.sizes || '').includes('192')) ||
+      parsed.find(i => i.sizeNum >= 192) ||
+      parsed[0] ||
+      null
+    );
+  }
+
+  async function resolveIcon(url) {
+    const key = normKey(url);
+    if (cache[key]) return cache[key];
+
+    try {
+      const base = new URL(key);
+      const html = await fetchText(base.href);
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+
+      const manifestLink = doc.querySelector('link[rel="manifest"]');
+      if (manifestLink) {
+        const manifestUrl = new URL(manifestLink.getAttribute('href'), base).href;
+        try {
+          const manifest = await fetchJSON(manifestUrl);
+          const icon = pickBestIcon(manifest?.icons);
+          if (icon?.src) {
+            const resolved = new URL(icon.src, manifestUrl).href;
+            cache[key] = resolved;
+            saveCache(cache);
+            return resolved;
+          }
+        } catch {}
+      }
+
+      const apple = doc.querySelector(
+        'link[rel="apple-touch-icon"], link[rel="apple-touch-icon-precomposed"]'
+      );
+      if (apple?.href) {
+        const resolved = new URL(apple.getAttribute('href'), base).href;
+        cache[key] = resolved;
+        saveCache(cache);
+        return resolved;
+      }
+
+      const shortcut = doc.querySelector('link[rel="shortcut icon"], link[rel="icon"]');
+      if (shortcut?.href) {
+        const resolved = new URL(shortcut.getAttribute('href'), base).href;
+        cache[key] = resolved;
+        saveCache(cache);
+        return resolved;
+      }
+
+      const fallback = new URL('/favicon.ico', base).href;
+      cache[key] = fallback;
+      saveCache(cache);
+      return fallback;
+    } catch (err) {
+      const fallback = (() => {
+        try { return new URL('/favicon.ico', new URL(key, location.href)).href; }
+        catch { return null; }
+      })();
+
+      if (fallback) {
+        cache[key] = fallback;
+        saveCache(cache);
+      }
+      return fallback;
+    }
+  }
+
+  function paintButton(btn, iconUrl) {
+    if (!btn) return;
+
+    btn.classList.add('di-icon-ready');
+    btn.innerHTML = '';
+
+    const img = document.createElement('img');
+    img.className = 'di-btn-icon-img';
+    img.alt = '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.src = iconUrl;
+
+    img.onerror = () => {
+      const fallback = document.createElement('span');
+      fallback.className = 'di-btn-icon-fallback';
+      fallback.textContent = btn.dataset.fallback || '◉';
+      btn.innerHTML = '';
+      btn.appendChild(fallback);
+    };
+
+    btn.appendChild(img);
+  }
+
+  async function processButton(btn) {
+    const url = btn.dataset.url;
+    if (!url) return;
+
+    const icon = await resolveIcon(url);
+    if (icon) paintButton(btn, icon);
+  }
+
+  async function run() {
+    const list = buttons();
+    await Promise.all(list.map(processButton));
+  }
+
+  function observeDynamicButtons() {
+    const root = document.body;
+    if (!root) return;
+
+    const mo = new MutationObserver(() => {
+      buttons().forEach(btn => {
+        if (btn.dataset.diIconDone === '1') return;
+        btn.dataset.diIconDone = '1';
+        processButton(btn);
+      });
+    });
+
+    mo.observe(root, { childList: true, subtree: true });
+  }
+
+  window.DI_ICON_LOADER = {
+    refresh: run,
+    clearCache() {
+      Object.keys(cache).forEach(k => delete cache[k]);
+      saveCache(cache);
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await run();
+    observeDynamicButtons();
+  });
+})();
+</script><div id="kblx-addbtn-back">
+  <div id="kblx-addbtn-panel">
+    <div class="kblx-addbtn-chip">⊙ KOBLLUX HUD · NOVO BOTÃO</div>
+    <div class="kblx-addbtn-title">Adicionar ao Symbol Bar</div>
+    <div class="kblx-addbtn-row">
+      <div class="kblx-addbtn-field sym-field">
+        <span class="kblx-addbtn-lbl">Símbolo</span>
+        <input id="kblx-sym-inp" class="kblx-addbtn-inp" maxlength="4" placeholder="☯" spellcheck="false" autocomplete="off">
+      </div>
+      <div class="kblx-addbtn-field" style="flex:0 0 90px;align-items:center;padding-top:18px;">
+        <div id="kblx-sym-preview">☯</div>
+      </div>
+      <div class="kblx-addbtn-field">
+        <span class="kblx-addbtn-lbl">ID</span>
+        <input id="kblx-id-inp" class="kblx-addbtn-inp" placeholder="meu-link" spellcheck="false" autocomplete="off">
+      </div>
+    </div>
+    <div class="kblx-addbtn-field" style="margin-bottom:1rem;">
+      <span class="kblx-addbtn-lbl">URL / Arquivo</span>
+      <input id="kblx-url-inp" class="kblx-addbtn-inp" placeholder="pagina.html  ou  https://..." spellcheck="false" autocomplete="off">
+    </div>
+    <div class="kblx-addbtn-actions">
+      <button class="kblx-addbtn-btn kblx-addbtn-save" id="kblx-addbtn-ok">⊙ Adicionar</button>
+      <button class="kblx-addbtn-btn kblx-addbtn-cancel" id="kblx-addbtn-cancel">✕ Cancelar</button>
+    </div>
+  </div>
+</div>
+<div id="kblx-toast"></div>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/nxs.js"></script>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/nxs.js"></script><div id="kblx-addbtn-back">
+  <div id="kblx-addbtn-panel">
+    <div class="kblx-addbtn-chip">⊙ KOBLLUX HUD · NOVO BOTÃO</div>
+    <div class="kblx-addbtn-title">Adicionar ao Symbol Bar</div>
+    <div class="kblx-addbtn-row">
+      <div class="kblx-addbtn-field sym-field">
+        <span class="kblx-addbtn-lbl">Símbolo</span>
+        <input id="kblx-sym-inp" class="kblx-addbtn-inp" maxlength="4" placeholder="☯" spellcheck="false" autocomplete="off">
+      </div>
+      <div class="kblx-addbtn-field" style="flex:0 0 90px;align-items:center;padding-top:18px;">
+        <div id="kblx-sym-preview">☯</div>
+      </div>
+      <div class="kblx-addbtn-field">
+        <span class="kblx-addbtn-lbl">ID</span>
+        <input id="kblx-id-inp" class="kblx-addbtn-inp" placeholder="meu-link" spellcheck="false" autocomplete="off">
+      </div>
+    </div>
+    <div class="kblx-addbtn-field" style="margin-bottom:1rem;">
+      <span class="kblx-addbtn-lbl">URL / Arquivo</span>
+      <input id="kblx-url-inp" class="kblx-addbtn-inp" placeholder="pagina.html  ou  https://..." spellcheck="false" autocomplete="off">
+    </div>
+    <div class="kblx-addbtn-actions">
+      <button class="kblx-addbtn-btn kblx-addbtn-save" id="kblx-addbtn-ok">⊙ Adicionar</button>
+      <button class="kblx-addbtn-btn kblx-addbtn-cancel" id="kblx-addbtn-cancel">✕ Cancelar</button>
+    </div>
+  </div>
+</div>
+<div id="kblx-toast"></div>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/nxs.js"></script>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/nxs.js"></script></body></html>
