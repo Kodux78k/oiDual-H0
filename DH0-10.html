@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/base1.css">
 <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/kob-hud.css">
 
--->
 
 <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kxt-solar.css">
 
@@ -27,14 +26,27 @@
 
 
   <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-framefix.css">
+
+-->
+
   <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/0x01_pulsar_V_D5-2.css">
   
 
- 
+ <style>
+.main-toggle,
+  #toggleBtn {color: var(--kob-voice-secondary);
+    width: 48px;
+    height: 48px;border:12px;box-shadow: var(--kob-voice-primary);
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+</style>
+
 </head>
 <body>
 
 <div id="root">
+
+  <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-dox-nanai-v4.css">
 
   <link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/css/kob-glass-0.css">
 
@@ -53,26 +65,31 @@
 
   <!-- HUD Inteligente -->
   <div class="symbol-bar floating" id="symbolBar">
-    
+          <div class="symbol-wrap">
+
+          <div class="drawer-toggle" onclick="toggleDrawer()" title="Abrir Engine de Background">🎛️</div>
+        </div>
+
+  
     <!-- Botão Menu -->
     <div class="toggle-wrap">
-      <button class="symbol-button main-toggle" id="toggleBtn" title="Menu / Iniciar">≡</button>
+      <button class="symbol-button main-toggl" id="toggleBtn" title="Menu / Iniciar">≡</button>
     </div>
 
     <!-- Controles de Navegação de Leitura -->
-    <div class="symbol-wrap">
+  <!--  <div class="symbol-wrap">
       <button class="symbol-button" id="btn-prev" title="Voltar Bloco">◀</button>
-    </div>
+    </div> -->
     <div class="symbol-wrap">
       <button class="symbol-button" id="btn-play" title="Play/Pause">▶</button>
     </div>
-    <div class="symbol-wrap">
+   <!--  <div class="symbol-wrap">
       <button class="symbol-button" id="btn-next" title="Próximo Bloco">▶▶</button>
-    </div>
+    </div> -->
 
-<div class="symbol-wrap">
+     <div class="symbol-wrap">
     <button class="symbol-button" id="tts-stop" title="Parar">■</button>
-  </div
+  </div>
 
     <!-- Troca de Arquétipo com ORB integrado (Sempre visível) -->
     <button class="symbol-button" id="btn-arch" title="Trocar Arquétipo de Voz">
@@ -90,12 +107,14 @@
 
     <!-- Outros atalhos -->
     <div class="symbol-wrap">
-      <button class="symbol-button" data-id="phi" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/78F/index.html">Φ</button>
+      <button class="symbol-button" data-id="phi" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/78F/">🌌</button>
     </div>
     <div class="symbol-wrap">
-      <button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/index.html">꩜</button>
+      <button class="symbol-button" data-id="viv" data-url="https://kodux78k.github.io/oiDual--Y-/M0D/78FFD/">🛋️</button>
     </div>
-    <div class="symbol-wrap">
+  
+
+ <div class="symbol-wrap">
       <button class="symbol-button" data-id="home" data-url="https://kodux78k.github.io/oiDual-idHome/">◌</button>
     </div>
     <div class="symbol-wrap">
@@ -106,38 +125,12 @@
   </div>
 </div>
        <div id="arch-overlay"></div>  
-
-<div id="bg-fake-custom">
-
 <!-- Scripts -->
 <script type="module" src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kobdh0-main.js"></script>
 
 </div>
 
-<style> 
 
-/* estado normal */
-.kob-tts-dock{
-  transition: transform .35s ease, opacity .65s ease;
-}
-
-/* quase invisível */
-.kob-tts-dock.idle{
-  opacity: .18;
-  transform: scale(.92);
-}
-
-/* quando passa o dedo ou mouse */
-.kob-tts-dock:hover{
-  opacity: 1;
-  transform: scale(1);
-}
-
-.kob-tts-dock{
-
- 
-  box-shadow:none !important;
-}</style>
 
 
 
@@ -171,7 +164,7 @@ resetIdle();
      ║  Segurar 3s → edita data-url do botão   ║
      ║  Clique curto → sistema externo cuida   ║
      ╚══════════════════════════════════════════╝ -->
-<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/css/0x01_pulsar_V_D5-2.css">
+
 
 <div id="kblx-back">
   <div id="kblx-panel">
@@ -187,36 +180,160 @@ resetIdle();
 </div>
 
 
+<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/78F/css/main.css">
 
+<link rel="stylesheet" href="https://kodux78k.github.io/oiDual--Y-/M0D/78F/css/main-ovr.css">
 
-<script src="https://kodux78k.github.io/oiDual--Y-/js/78F-bgPanel.js"></script>
+<div class="bg-gradient-base"></div>
+  <div id="bg-layer-fixed"></div>
+
+  <div id="drawerOverlay" onclick="toggleDrawer()"></div>
+
+  <aside class="drawer" id="drawerPanel" aria-label="Background Engine">
+    <div class="drawer-header">
+      <h2>⚙️ Background Engine</h2>
+      <button class="drawer-close" onclick="toggleDrawer()" title="Fechar">×</button>
+    </div>
+
+    <div class="drawer-body">
+      <div class="panel-section">
+        <label class="section-label"><span>Background</span><span id="bgStatusText">Nenhum</span></label>
+        <div class="tiny-note">Ajuste a camada fixa do app e sincronize com localStorage.</div>
+      </div>
+
+      <div class="panel-section">
+        <label class="section-label"><span>Opacidade</span><span id="val-op">15%</span></label>
+        <input id="bgOpacity" type="range" min="0" max="100" value="15" oninput="updateBgAttr('opacity', this.value)">
+      </div>
+
+      <div class="panel-section">
+        <label class="section-label"><span>Mix Blend Mode</span><span>CSS</span></label>
+        <select id="bgBlend" onchange="updateBgAttr('blend', this.value)">
+          <option value="normal">Normal</option>
+          <option value="multiply">Multiply (Escurecer)</option>
+          <option value="screen">Screen (Clarear)</option>
+          <option value="overlay" selected>Overlay (Realçar)</option>
+          <option value="soft-light">Soft Light (Suave)</option>
+          <option value="luminosity">Luminosity (Fantasma)</option>
+        </select>
+      </div>
+
+      <div class="panel-section">
+        <label class="section-label"><span>Presets de Estilo</span><span>BG</span></label>
+        <div class="preset-grid">
+          <button class="preset-btn" data-bg-preset="ghost" onclick="applyPreset('ghost')">Fantasma</button>
+          <button class="preset-btn active" data-bg-preset="vivid" onclick="applyPreset('vivid')">Vívido</button>
+          <button class="preset-btn" data-bg-preset="deep" onclick="applyPreset('deep')">Profundo</button>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <label class="section-label"><span>Biblioteca Local</span><span id="libCount">0</span></label>
+        <div class="bg-thumbs" id="thumb-list"></div>
+        <label class="btn-upload">
+          + Fazer Upload de Imagem
+          <input type="file" id="file-upload" accept="image/*" hidden onchange="handleUpload(this)">
+        </label>
+      </div>
+
+      <div class="panel-section">
+        <label class="section-label"><span>FX Lab</span><span>Upload / Frame</span></label>
+        <div class="fx-stage">
+          <div class="fx-actions">
+            <button class="btn-mini" onclick="loadCurrentFrameToFX()">Carregar quadro atual</button>
+            <label class="btn-mini" style="justify-content:center;">
+              Upload imagem
+              <input type="file" id="fx-upload" accept="image/*" hidden>
+            </label>
+            <button class="btn-download" onclick="downloadFX()">Download PNG</button>
+          </div>
+
+          <div class="fx-canvas-wrap">
+            <canvas id="fxCanvas" width="1200" height="800"></canvas>
+          </div>
+
+          <div class="preset-grid">
+            <button class="preset-btn active" data-fx-mode="texture" onclick="setFXMode('texture')">Textura</button>
+            <button class="preset-btn" data-fx-mode="liquid" onclick="setFXMode('liquid')">Líquido</button>
+            <button class="preset-btn" data-fx-mode="paint" onclick="setFXMode('paint')">Tinta</button>
+          </div>
+
+          <div class="panel-section" style="padding:14px;">
+            <label class="section-label"><span>Blur gaussiano</span><span id="fxBlurVal">4</span></label>
+            <input id="fxBlur" type="range" min="0" max="24" value="4">
+          </div>
+
+          <div class="panel-section" style="padding:14px;">
+            <label class="section-label"><span>Intensidade</span><span id="fxIntensityVal">55</span></label>
+            <input id="fxIntensity" type="range" min="0" max="100" value="55">
+          </div>
+
+          <div class="panel-section" style="padding:14px;">
+            <label class="section-label"><span>Liquify</span><span id="fxLiquifyVal">0</span></label>
+            <input id="fxLiquify" type="range" min="0" max="100" value="0">
+          </div>
+
+          <div class="panel-section" style="padding:14px;">
+            <label class="section-label"><span>Grain / textura</span><span id="fxGrainVal">35</span></label>
+            <input id="fxGrain" type="range" min="0" max="100" value="35">
+          </div>
+
+          <div class="panel-section" style="padding:14px;">
+            <label class="section-label"><span>Contraste</span><span id="fxContrastVal">108</span></label>
+            <input id="fxContrast" type="range" min="80" max="140" value="108">
+          </div>
+
+          <div class="panel-section" style="padding:14px;">
+            <label class="section-label"><span>Saturação</span><span id="fxSaturationVal">102</span></label>
+            <input id="fxSaturation" type="range" min="60" max="150" value="102">
+          </div>
+
+          <button class="btn-action" onclick="applyFXToBackground()">Aplicar FX no Background</button>
+          <div class="tiny-note">Se a imagem for muito grande, o motor reduz a área para manter o render leve.</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+     
+
+    
+
+ <script src="https://kodux78k.github.io/oiDual--Y-/M0D/78F/js/modules/inline-0.js"></script>
+
+  <script src="https://kodux78k.github.io/oiDual--Y-/M0D/78F/js/inline-bg.js"></script>
+
+  
+
+  <script>
+    console.log("Sistema operacional SÜMBÜS Pronto.");
+  </script>
+
+<script>
+const ARCHETYPES = ["atlas","nova","vitalis","pulse","kaos","kodux","lumine","aion","kobllux","artemis","serena","genus","solus","rhea","uno","dual","trinity","infodose","horus","bllue", localStorage.getItem("di_userName")];
+</script>
 
 <script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/0x03_expandir_V_D7.js"></script>
 
 
 <script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/0x07_selar_B_D3.js"></script>
 
-<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kob-outline-uni.js"></script>
 
-<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/inline-0.js"></script>
+<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kob-mstr.js"></script>
+
+<script src="https://kodux78k.github.io/oiDual--Y-/js/kob-mestre-878.js"></script>
 
 <script src="https://kodux78k.github.io/oiDual--Y-/M0D/kard/js/modules/o0.js"></script>
-  
-
-<script>
-const ARCHETYPES = ["atlas","nova","vitalis","pulse","kaos","kodux","lumine","aion","kobllux","artemis","serena","genus","solus","rhea","uno","dual","trinity","infodose","horus","bllue", localStorage.getItem("di_userName")];
-</script>
 
 <script src="https://kodux78k.github.io/oiDual--Y-/js/koblluxv30.js"></script>
 
 <script src="https://kodux78k.github.io/oiDual--Y-/js/kodbrain-66.js"></script>
 
-<script src="https://kodux78k.github.io/oiDual--Y-/js/dikob0000.js"></script>
-
 <script src="https://kodux78k.github.io/oiDual--Y-/js/kobllux-fusion.js"></script>     
 
+<script src="https://kodux78k.github.io/oiDual--Y-/M0D/kob-DH0/js/kob-outline-uni.js"></script>
 
 <script src="https://kodux78k.github.io/oiDual--Y-/js/di-icon-btn.js"></script>
 
- 
+
 </body></html>
